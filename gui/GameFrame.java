@@ -22,7 +22,6 @@ public class GameFrame implements ActionListener{
 	private int HEIGHT = 600;
 	
 	public GameFrame(){
-		//teste
 		frame = new JFrame("D&D");
 		label = new JLabel("JOGO");
 		exit = new JButton("Exit Game");
