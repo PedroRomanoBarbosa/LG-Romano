@@ -1,32 +1,21 @@
 package logic;
 
-import java.awt.Font;
 import java.util.Random;
 import java.util.Stack;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 public class Gerador {
 	private Stack<int[]> backtrack = new Stack<int[]>();
 	private char[][] visitedCells;
 	private int visitedCellSIZE;
 	private int SIZE;
-	private JFrame currentFrame;
-	private JPanel currentPanel;
-	private JLabel currentLabel;
-	private boolean modo; //false - preset; true - aleat�rio
 	private Ponto exit;
 
 	public Gerador(int size){
 		exit = new Ponto();
 		this.SIZE = size;
-		this.modo = true;
 	}
 
 	public Gerador(){
-		this.modo = false;
 		exit = new Ponto();
 		this.SIZE = 10;
 	}

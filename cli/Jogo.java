@@ -19,7 +19,7 @@ public class Jogo {
 	private static int SIZE = 0;
 	private static int xCoord,yCoord;
 	private static int xCoordDragon, yCoordDragon;
-	private static char heroSymbol = 'H';
+	//private static char heroSymbol = 'H';
 	private static char currentSymbol = 'H';
 	private static char currentDragonSymbol = 'D';
 	private static char DragonSword = 'F';

@@ -2,10 +2,8 @@ package test;
 
 import static org.junit.Assert.*;
 
-import java.util.TreeSet;
 
 import logic.Dragao;
-import logic.Espada;
 import logic.EstadoJogo;
 import logic.Heroi;
 import logic.Maze;
