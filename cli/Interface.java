@@ -1,5 +1,7 @@
 package cli;
 
+import gui.GameFrame;
+
 import java.util.Scanner;
 
 import logic.EstadoJogo;
@@ -11,7 +13,7 @@ public class Interface {
 		Scanner scan = new Scanner(System.in);
 		int size = 0;
 		int mode, dif;
-		
+		String input;
 		EstadoJogo jogo = new EstadoJogo();
 
 		do{
@@ -43,10 +45,13 @@ public class Interface {
 		}
 		jogo.addElements();
 		jogo.printGame();
-
+		GameFrame GUI = new GameFrame(jogo);
 		boolean state;
 		do{
-			state = jogo.play();
+			do{
+				input = scan.nextLine();
+			}while( !(input.equalsIgnoreCase("w") || input.equalsIgnoreCase("a") || input.equalsIgnoreCase("s") || input.equalsIgnoreCase("d") || input.equalsIgnoreCase("f")));
+			state = jogo.play(input);
 		}while(state == true);
 
 		System.out.println("Jogo acabado!");

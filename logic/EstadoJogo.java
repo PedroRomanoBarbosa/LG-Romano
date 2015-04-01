@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class EstadoJogo {
 	private Maze labirinto;
 	private Heroi heroi;
-	
+	public int SIZE;
 	/* to test preset maze */
 	private Dragao dragao;
 	private Espada espada;
@@ -27,19 +27,20 @@ public class EstadoJogo {
 
 	//functions
 	public EstadoJogo(){
-
 	}
 
 	public void initialize(){
 		this.labirinto = new Maze();
 		this.labirinto.getExitCoord();
 		this.state = true;
+		SIZE = 10;
 	}
 
 	public void initialize(int size){
 		this.labirinto = new Maze(size);
 		this.labirinto.getExitCoord();
 		this.state = true;
+		SIZE = size;
 	}
 
 	public void setDifficulty(int dif){
@@ -78,13 +79,7 @@ public class EstadoJogo {
 		dragoes.add(d2);
 	}
 	
-	public boolean play(){
-		String s;
-		GameFrame GUI = new GameFrame();
-		//GET USER INPUT
-		do{
-			s = scan.nextLine();
-		}while( !(s.equalsIgnoreCase("w") || s.equalsIgnoreCase("a") || s.equalsIgnoreCase("s") || s.equalsIgnoreCase("d") || s.equalsIgnoreCase("f")));
+	public boolean play(String s){
 		if(s.equalsIgnoreCase("f") ){
 			if(heroi.getDardNumber() > 0)
 			{
@@ -93,7 +88,6 @@ public class EstadoJogo {
 			}
 		}else{
 			this.moveHero(s.charAt(0));
-			//CHECK IF IT FINISHED
 			if(this.checkFinal() == true){
 				state = false;
 			}

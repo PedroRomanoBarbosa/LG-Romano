@@ -1,74 +1,87 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class GameFrame implements ActionListener{
-	
+import logic.EstadoJogo;
+
+public class GameFrame implements ActionListener, KeyListener{
+
+	private EstadoJogo game;
 	private JFrame frame;
 	private JPanel panel;
-	private JLabel label;
+	private JPanel panel2;
 	private JButton exit, restart, backToMain;
 	private GridLayout buttonLayout;
+	private GridLayout mazeLayout, frameLayout;
 	private int WIDTH = 750;
 	private int HEIGHT = 600;
-	
-	public GameFrame(){
+
+	public GameFrame(EstadoJogo g){
+		game = g;
 		frame = new JFrame("D&D");
-		label = new JLabel("JOGO");
 		exit = new JButton("Exit Game");
 		restart = new JButton("Restart Game");
 		backToMain = new JButton("Back to Main Menu");
 		panel = new JPanel();
-		
-		frame.setSize(WIDTH, HEIGHT);
-		frame.setLocationRelativeTo(null);
+		panel2 = new JPanel();
+		frame.addKeyListener(this);
 		frame.setVisible(true);
 		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLayout(null);
-		panel.setBounds(580, 250, 150, 300);
-		
 		buttonLayout = new GridLayout(3,1);
-		buttonLayout.setVgap(10);
+		frameLayout = new GridLayout(1,2);
+		mazeLayout = new GridLayout(game.SIZE,game.SIZE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLayout(frameLayout);
+
 		panel.setLayout(buttonLayout);
+		panel2.setLayout(mazeLayout);
 		
-		exit.setSize(100, 50);
+		for(int y = 0; y < game.SIZE; y++){
+			for(int x = 0; x < game.SIZE; x++){
+				JLabel l = new JLabel(game.getMaze().getLab()[y][x] + "");
+				panel2.add(l);
+			}
+		}
+		
 		exit.addActionListener(this);
-		restart.setSize(100, 50);
-		backToMain.setSize(100, 50);
-		
-		
-		label.setBounds(1, 1, 749, 20);
-		label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		label.setHorizontalAlignment(JLabel.CENTER);
-		
 		panel.add(exit);
 		panel.add(restart);
 		panel.add(backToMain);
-		
-		
-		frame.add(label);
+
+		frame.add(panel2);
 		frame.add(panel);
-		frame.validate();
+		frame.pack();
 	}
-	
+
 	public int getWidth(){
 		return WIDTH;
 	}
-	
+
 	public int getHeigth(){
 		return HEIGHT;
 	}
 
+	public void update(){
+		panel2.removeAll();
+		for(int y = 0; y < game.SIZE; y++){
+			for(int x = 0; x < game.SIZE; x++){
+				JLabel l = new JLabel(game.getMaze().getLab()[y][x] + "");
+				panel2.add(l);
+			}
+		}
+		panel2.validate();
+		frame.pack();
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -76,7 +89,37 @@ public class GameFrame implements ActionListener{
 			System.exit(0);
 		}
 	}
-	
-	
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		int c = e.getKeyCode();
+		System.out.print(c);
+		if(c == 87){
+			game.play("w");
+		}
+		else if(c == 83){
+			game.play("s");
+		}
+		else if(c == 68){
+			game.play("d");
+		}
+		else if(c == 65){
+			game.play("a");
+		}
+		this.update();
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		
+	}
+
+
 
 }
