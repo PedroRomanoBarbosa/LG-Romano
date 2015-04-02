@@ -5,8 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,15 +37,15 @@ public class GameFrame implements ActionListener, KeyListener{
 		frame.setResizable(false);
 		buttonLayout = new GridLayout(3,1);
 		frameLayout = new GridLayout(1,2);
-		mazeLayout = new GridLayout(game.SIZE,game.SIZE);
+		mazeLayout = new GridLayout(game.getSIZE(),game.getSIZE());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(frameLayout);
 
 		panel.setLayout(buttonLayout);
 		panel2.setLayout(mazeLayout);
 		
-		for(int y = 0; y < game.SIZE; y++){
-			for(int x = 0; x < game.SIZE; x++){
+		for(int y = 0; y < game.getSIZE(); y++){
+			for(int x = 0; x < game.getSIZE(); x++){
 				JLabel l = new JLabel(game.getMaze().getLab()[y][x] + "");
 				panel2.add(l);
 			}
@@ -73,8 +71,8 @@ public class GameFrame implements ActionListener, KeyListener{
 
 	public void update(){
 		panel2.removeAll();
-		for(int y = 0; y < game.SIZE; y++){
-			for(int x = 0; x < game.SIZE; x++){
+		for(int y = 0; y < game.getSIZE(); y++){
+			for(int x = 0; x < game.getSIZE(); x++){
 				JLabel l = new JLabel(game.getMaze().getLab()[y][x] + "");
 				panel2.add(l);
 			}
@@ -93,7 +91,6 @@ public class GameFrame implements ActionListener, KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int c = e.getKeyCode();
-		System.out.print(c);
 		if(c == 87){
 			game.play("w");
 		}

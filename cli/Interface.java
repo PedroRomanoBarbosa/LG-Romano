@@ -53,7 +53,6 @@ public class Interface {
 			}while( !(input.equalsIgnoreCase("w") || input.equalsIgnoreCase("a") || input.equalsIgnoreCase("s") || input.equalsIgnoreCase("d") || input.equalsIgnoreCase("f")));
 			state = jogo.play(input);
 		}while(state == true);
-
 		System.out.println("Jogo acabado!");
 	}
 }

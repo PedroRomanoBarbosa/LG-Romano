@@ -2,81 +2,107 @@ package logic;
 
 import java.util.Random;
 
+/**
+ * 
+ * This class represents all the entities in the game.
+ * 
+ * @author PedroBarbosa
+ *
+ */
 public class Elemento {
 
 	protected Ponto ponto;
 	protected char symbol;
 	protected char symbolBelow;
 
+	
+	/**
+	 * Creates a new Element object.
+	 * @param symbol symbol of the element
+	 */
 	public Elemento(char symbol){
 		this.symbol = symbol;
 		this.ponto = new Ponto();
 	}
-
+	/**
+	 * Class constructor with symbol and coordinates.
+	 * @param p point with coordinates
+	 * @param symbol symbol of the element
+	 */
 	public Elemento (Ponto p, char symbol)
 	{
 		this.ponto=p;
 		this.symbol=symbol;
 	}
-
-	
-	
+	/**
+	 * Set symbol below element.
+	 * @param sym new symbol below element
+	 */
 	public void setSymbolBelow(char sym){
 		symbolBelow = sym;
 	}
-	
+	/**
+	 * Return symbol below element.
+	 * @return symbolBelow
+	 */
 	public char getSymbolBelow(){
 		return this.symbolBelow;
 	}
-	
+	/**
+	 * Return point with element's coordinates.
+	 * @return ponto
+	 */
 	public Ponto getPonto() {
 		return ponto;
 	}
-
+	/**
+	 * Sets element point with coordinates
+	 * @param ponto point with element's coordinates
+	 */
 	public void setPonto(Ponto ponto) {
 		this.ponto = ponto;
 	}
-	
+	/**
+	 * Sets element's coordinates in element's point.
+	 * @param x x coordinate
+	 * @param y y coordinate
+	 */
 	public void setPosition(int x, int y){
 		this.ponto.setXpos(x);
 		this.ponto.setYpos(y);
 	}
-
+	/**
+	 * Returns element's symbol.
+	 * @return symbol
+	 */
 	public char getSymbol() {
 		return symbol;
 	}
-
+	/**
+	 * Sets the symbol of the element.
+	 * @param symbol new symbol
+	 */
 	public void setSymbol(char symbol) {
 		this.symbol = symbol;
 	}
-
-	
-	/*public void moveDir(char dir, int desl)
-	{
-		switch(dir)
-		{
-		case'W': case 'w':
-			this.ponto.setYpos(this.ponto.getYpos()-desl);
-			break;
-		case'S': case 's':
-			this.ponto.setYpos(this.ponto.getYpos()+desl);
-			break;
-		case'A': case 'a':
-			this.ponto.setXpos(this.ponto.getXpos()-desl);
-			break;
-		case'D': case 'd':
-			this.ponto.setXpos(this.ponto.getXpos()+desl);
-			break;
-		}
-	}*/
-
+	/**
+	 * Generates a valid position for the element in<br>
+	 * a maze and sets the element to that position.
+	 * @param maze maze of the game
+	 * @param size size of the maze
+	 */
 	public void generate(Maze maze, int size){
 		Random rand = new Random();
 		int position = rand.nextInt(countBlankSpace(maze.getLab(),size)) + 1;
 		setCoord(position,maze.getLab(),size);
 		this.setSymbolBelow(symbolBelow);
 	}
-
+	/**
+	 * Counts the valid positions in a maze array.
+	 * @param maze two-dimentional maze array
+	 * @param size size of the maze
+	 * @return number of valid positions
+	 */
 	public int countBlankSpace(char[][] maze, int size){
 		int counter = 0;
 		for(int y = 0; y < size; y++){
@@ -88,7 +114,12 @@ public class Elemento {
 		}
 		return counter;
 	}
-
+	/**
+	 * Sets element in maze and sets it's coordinates
+	 * @param pos position of the element
+	 * @param maze two-dimentional maze array
+	 * @param size size of the maze
+	 */
 	public void setCoord(int pos,char[][] maze, int size){
 		int counter = 0;
 		for(int y = 0; y < size; y++){

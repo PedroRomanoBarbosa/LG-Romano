@@ -1,60 +1,114 @@
 package logic;
 
-import gui.GameFrame;
-
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 
-
+/**
+ * This class handles all the logic from the game 
+ * and uses all the other logic classes.
+ * 
+ * @author PedroBarbosa
+ *
+ */
 public class EstadoJogo {
 	private Maze labirinto;
 	private Heroi heroi;
-	public int SIZE;
-	/* to test preset maze */
+	private int SIZE;
 	private Dragao dragao;
 	private Espada espada;
 	private Escudo escudo;
 	private Dardo dardo;
-	/* to test preset maze */
-	
-	private Scanner scan = new Scanner(System.in);
 	private ArrayList<Elemento> elementos = new ArrayList<Elemento>();
 	private ArrayList<Dragao> dragoes = new ArrayList<Dragao>();
-	private boolean state; // true - ativo ; false - acabado
-	private int difficulty; //1 - dragao parado; 2 - dragao movimento; 3 - dragao movimento + dormir
+	private boolean state;
+	private int difficulty; 
 
 
-	//functions
+	
+	
+	/**
+	 * Simple constructor.
+	 */
 	public EstadoJogo(){
 	}
-
+	/**
+	 * Returns the hero object of this gamestate.
+	 * @return Heroi
+	 */
+	public Heroi getHero(){
+		return heroi;
+	}
+	/**
+	 * Returns the maze object.
+	 * @return labirinth
+	 */
+	public Maze getMaze(){
+		return labirinto;
+	}
+	/**
+	 * Returns the size of the maze.
+	 * @return SIZE
+	 */
+	public int getSIZE() {
+		return SIZE;
+	}
+	/**
+	 * Sets the hero for this gamestate.
+	 * @param h - hero
+	 */
+	public void setHeroi(Heroi h){
+		heroi = h;
+	}
+	/**
+	 * Returns the state of this gamestate.
+	 * <p>
+	 * true - active <br>
+	 * false - finished
+	 * @return state
+	 */
+	public boolean getState(){
+		return state;
+	}
+	/**
+	 * Initializes the gamestate with a 10x10 pre-defined board.
+	 */
 	public void initialize(){
 		this.labirinto = new Maze();
 		this.labirinto.getExitCoord();
 		this.state = true;
 		SIZE = 10;
 	}
-
+	/**
+	 * Initializes the gamestate with a user defined board. Size must be an odd number.
+	 * @param size size of the game board
+	 */
 	public void initialize(int size){
 		this.labirinto = new Maze(size);
 		this.labirinto.getExitCoord();
 		this.state = true;
 		SIZE = size;
 	}
-
+	/**
+	 * Sets the difficulty of the game.
+	 * <p>
+	 * 1 - immovable dragons<br>
+	 * 2 - roamming dragons<br>
+	 * 3 - roamming dragons + asleep
+	 * 
+	 * @param dif difficulty of the game
+	 */
 	public void setDifficulty(int dif){
 		difficulty = dif;
 	}
-
+	/**
+	 * Prints labirinth to the console.
+	 */
 	public void printGame(){
 		labirinto.print();
 	}
-
-	public boolean getState(){
-		return state;
-	}
-
+	/**
+	 * Adds elements to the gamestate.
+	 */
 	public void addElements(){
 		Heroi h = new Heroi('H',true,false);
 		heroi = h;
@@ -78,7 +132,17 @@ public class EstadoJogo {
 		d2.generate(labirinto, labirinto.getSIZE());
 		dragoes.add(d2);
 	}
-	
+	/**
+	 * Initiates a play.<p>
+	 * 
+	 * This function executes the command of the hero( move or fire ).<br>
+	 * Moves the dragons and checks collision with the hero and the dragons.<br>
+	 * Checks if hero is dead or has won the game.<br>
+	 * Prints the game in the console.
+	 * 
+	 * @param s command of the hero
+	 * @return state 
+	 */
 	public boolean play(String s){
 		if(s.equalsIgnoreCase("f") ){
 			if(heroi.getDardNumber() > 0)
@@ -122,14 +186,22 @@ public class EstadoJogo {
 		this.printGame();
 		return state;
 	}
-
+	/**
+	 * Moves hero in one of the four possible directions.<p>
+	 * direction:<p>
+	 * 'w' | 'W' - North<br>
+	 * 's' | 'S' - South<br>
+	 * 'd' | 'D' - East<br>
+	 * 'a' | 'A' - West
+	 * @param dir direction
+	 */
 	public void moveHero(char dir){
 		char nextChar = ' ';
 		int nextY = 0, nextX = 0;
 		int initialY, initialX;
 		initialX = heroi.getPonto().getXpos();
 		initialY = heroi.getPonto().getYpos();
-		
+
 		switch(dir){
 		case 'w': case 'W':
 			nextChar = labirinto.getLab()[heroi.getPonto().getYpos() - 1][heroi.getPonto().getXpos()];
@@ -177,14 +249,17 @@ public class EstadoJogo {
 			labirinto.getLab()[nextY][nextX] = heroi.getSymbol();
 		}
 	}
-
+	/**
+	 * Shoots a dard in all four directions.<br>
+	 * The first dragon in each direction in<br>
+	 * reach dies and is removed from play.
+	 */
 	public void shootDard(){
 		int x_init = heroi.getPonto().getXpos();
 		int y_init = heroi.getPonto().getYpos();
 		int y = y_init;
 		int x = x_init;
 
-		//pesquisar para o norte 
 		y--;
 		if(y != 0){
 			while(y > 0){
@@ -249,7 +324,14 @@ public class EstadoJogo {
 		}
 		heroi.consumeDrad();
 	}
-
+	/**
+	 * Checks if the hero is adjacent to one or more dragons.<br>
+	 * If the hero is equipped with a sword the dragon<br>
+	 * dies. If the hero doesn't have a sword equipped<br>
+	 * the hero dies and the game ends.
+	 * @return 1 - if hero dies<br>
+	 * 		   2 - if hero kills dragons
+	 */
 	public int checkCollisionWithDragon(){
 		char sul = labirinto.getLab()[heroi.getPonto().getYpos() + 1][heroi.getPonto().getXpos()];
 		char norte = labirinto.getLab()[heroi.getPonto().getYpos() - 1][heroi.getPonto().getXpos()];
@@ -275,7 +357,12 @@ public class EstadoJogo {
 		}
 		return 0;
 	}
-
+	/**
+	 * Removes a certain element from the elements list.
+	 * @param tipo type of element
+	 * @param x x coordinate
+	 * @param y y coordinate
+	 */
 	public void removeElement(String tipo, int x, int y){
 		for(int i = 0; i < elementos.size(); i++){
 			if( elementos.get(i).toString().equals("Espada") && elementos.get(i).getPonto().getXpos() == x && elementos.get(i).getPonto().getYpos() == y){
@@ -288,7 +375,10 @@ public class EstadoJogo {
 			}
 		}
 	}
-
+	/**
+	 * Moves all dragons in the dragons list.<br>
+	 * For each dragon it calls the function moveDragao(Dragao d). 
+	 */
 	public void moveDragons(){
 		for(int i = 0; i < dragoes.size(); i++){
 			if( dragoes.get(i).toString().equals("Dragao")){
@@ -299,7 +389,14 @@ public class EstadoJogo {
 			}
 		}
 	}
-
+	/**
+	 * Checks and evaluates the movement of the dragon.
+	 * @param dir direction of the movement
+	 * @param d dragon to move
+	 * @return 0 - valid movement<br>
+	 * 		   1 - invalid movement because of wall<br>
+	 * 		   2 - invalid movement because of other dragon
+	 */
 	public int validMovementDragon(int dir, Dragao d){
 		char sul = labirinto.getLab()[d.getPonto().getYpos() + 1][d.getPonto().getXpos()];
 		char norte = labirinto.getLab()[d.getPonto().getYpos() - 1][d.getPonto().getXpos()];
@@ -330,7 +427,10 @@ public class EstadoJogo {
 		return 1;
 
 	}
-
+	/**
+	 * Moves a dragon in a random valid direction
+	 * @param d dragon to move
+	 */
 	public void moveDragao(Dragao d){
 		char nextChar = ' ';
 		int valid;
@@ -390,7 +490,13 @@ public class EstadoJogo {
 		}
 
 	}
-	
+	/**
+	 * Kills all adjacent dragons in all directions.
+	 * @param norte north position
+	 * @param sul south position
+	 * @param este east position
+	 * @param oeste west position
+	 */
 	public void killAdjacentDragons(char norte, char sul, char este, char oeste){
 		if( norte == Dragao.swordDragon || norte == Dragao.activeSymbol || norte == Dragao.asleepSymbolInSword || norte == Dragao.sleepSymbol ){
 			labirinto.getLab()[heroi.getPonto().getYpos() - 1][heroi.getPonto().getXpos()] = ' ';
@@ -410,7 +516,11 @@ public class EstadoJogo {
 		}
 
 	}
-
+	/**
+	 * Checks if hero is in the exit.
+	 * @return true - if hero is in exit<br>
+	 * 		   false - if hero is not in the exit
+	 */
 	public boolean checkFinal(){
 		if(labirinto.getExit().getXpos() == heroi.getPonto().getXpos() && labirinto.getExit().getYpos() == heroi.getPonto().getYpos()){
 			return true;
@@ -418,7 +528,11 @@ public class EstadoJogo {
 		else
 			return false;
 	}
-
+	/**
+	 * Checks if hero is in a dragon's range.
+	 * @return true - if hero is in range<br>
+	 * 		   false - if hero isn't in range
+	 */
 	public boolean checkDragonRange(){
 		int x_init = heroi.getPonto().getXpos();
 		int y_init = heroi.getPonto().getYpos();
@@ -488,7 +602,16 @@ public class EstadoJogo {
 		}
 		return false;
 	}
-
+	/**
+	 * Moves a dragon in one of the four valid directions<br>
+	 * and sets it's position and symbol.
+	 * @param d dragon
+	 * @param nextChar next position
+	 * @param nextX next x coordinate
+	 * @param nextY next y coordinate
+	 * @param initialX initial x coordinate
+	 * @param initialY initial y coordinate
+	 */
 	public void moveDragaoDirection(Dragao d, char nextChar, int nextX, int nextY, int initialX, int initialY){
 		if (nextChar == 'E'){
 			d.setSymbol(Dragao.swordDragon);
@@ -506,33 +629,33 @@ public class EstadoJogo {
 			d.setSymbolBelow(' ');
 		}
 	}
-	
-	
+
+
 	///////////////JUNIT////////////////////////////
-	public Heroi getHero(){
-		return heroi;
-	}
-	
+	/**
+	 * [JUNIT function] - Returns dragon
+	 * @return test dragon
+	 */
 	public Dragao getDragao(){
 		return dragao;
 	}
-	
+	/**
+	 * [JUNIT function] - Returns espada
+	 * @return test sword
+	 */
 	public Espada getEspada(){
 		return espada;
 	}
-	
-	public Maze getMaze(){
-		return labirinto;
-	}
-	
+	/**
+	 * [JUNIT function] - Sets dragao
+	 * @param d test dragon
+	 */
 	public void setDragao(Dragao d){
 		dragao = d;
 	}
-	
-	public void setHeroi(Heroi h){
-		heroi = h;
-	}
-	
+	/**
+	 * [JUNIT function] - Initiates elements for JUNIT tests
+	 */
 	public void iniciar(){
 		this.labirinto = new Maze();
 		this.labirinto.getExitCoord();
@@ -565,16 +688,5 @@ public class EstadoJogo {
 		labirinto.setSymbol(pe, escudo.getSymbol());
 		labirinto.setSymbol(pda, dardo.getSymbol());
 	}
-	
-	/*public void iniciar2(){
-		this.labirinto = new Maze();
-		this.labirinto.getExitCoord();
-		this.state = true;
-		Dragao d = new Dragao('D',true,false);
-		dragao = d;
-		Ponto pd = new Ponto(1,3);
-		dragao.setPonto(pd);
-	}*/
 
-	
 }

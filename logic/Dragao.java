@@ -2,11 +2,18 @@ package logic;
 
 import java.util.Random;
 
+/**
+ * 
+ * Class that represents the dragon element
+ * 
+ * @author PedroBarbosa
+ *
+ */
 public class Dragao extends Elemento{
 
-	private boolean state; // true-alive, false-asleep
+	private boolean state; 
 	private boolean active; 
-	private boolean espadaDragao; //true-com espada, false- sem espada
+	private boolean espadaDragao; 
 	private int counter = 0;
 	public static char sleepSymbol = 'd';
 	public static char swordDragon = 'F';
@@ -16,6 +23,17 @@ public class Dragao extends Elemento{
 	public static int asleepMinimum = 1;
 	public static int awakeRatio = 10;
 
+	
+	/**
+	 * Dragon constructor.
+	 * @param sym dragon symbol
+	 * @param state state of the dragon<br>
+	 * 		  true - awakened<br>
+	 *        false - asleep
+	 * @param espadaDragao <br>
+	 * 					   true - on top of sword<br>
+	 * 					   false - not on top of sword
+	 */
 	public Dragao(char sym, boolean state, boolean espadaDragao)
 	{
 		super(sym);
@@ -23,27 +41,51 @@ public class Dragao extends Elemento{
 		this.active=true;
 		this.espadaDragao=espadaDragao;
 	}
-
+	/**
+	 * Returns active class member. 
+	 * @return active
+	 */
 	public boolean getActive(){
 		return active;
 	}
-	
+	/**
+	 * Returns state class member.
+	 * @return true - awakened<br>
+	 *         false - asleep
+	 */
 	public boolean getState() {
 		return state;
 	}
-
+	/**
+	 * Sets state of the dragon.
+	 * @param state state of dragon<br>
+	 * 					   true - awakened<br>
+	 *        			   false - asleep
+	 * 
+	 */
 	public void setState(boolean state) {
 		this.state = state;
 	}
-
+	/**
+	 * Returns the position of the dragon relative to the sword.
+	 * @return true - on top of sword<br>
+	 * 		   false - not on top of sword
+	 */
 	public boolean getEspadaDragao() {
 		return espadaDragao;
 	}
-
+	/**
+	 * Sets the position of the dragon relative to the sword.
+	 * @param espadaDragao <br>
+	 * 					true - on top of sword<br>
+	 * 		   			false - not on top of sword
+	 */
 	public void setEspadaDragao(boolean espadaDragao) {
 		this.espadaDragao = espadaDragao;
 	}
-
+	/**
+	 * 
+	 */
 	public int countBlankSpace(char[][] maze, int size){
 		int counter = 0;
 		int invalidCounter = 0;
@@ -53,7 +95,6 @@ public class Dragao extends Elemento{
 					counter++;
 				}
 				if(maze[y][x] == Heroi.heroDisarmedSymbol){
-					System.out.println("Check!");
 					if(maze[y-1][x] == ' '){
 						invalidCounter++;
 					}
@@ -69,7 +110,6 @@ public class Dragao extends Elemento{
 				}
 			}
 		}
-		System.out.println("Dragon blank spaces: " + (counter-invalidCounter));
 		return counter-invalidCounter;
 	}
 
@@ -97,7 +137,9 @@ public class Dragao extends Elemento{
 	public String toString(){
 		return "Dragao";
 	}
-
+	/**
+	 * Increments counter ofthe dragon.
+	 */
 	public void incCounter(){
 		if(active == true){
 			counter++;
