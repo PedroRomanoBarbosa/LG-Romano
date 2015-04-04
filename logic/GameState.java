@@ -11,7 +11,7 @@ import java.util.Random;
  * @author PedroBarbosa
  *
  */
-public class GameState{
+public class GameState implements Serializable{
 	private Maze labirinto;
 	private Hero hero;
 	private int SIZE;
