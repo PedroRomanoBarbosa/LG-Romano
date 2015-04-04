@@ -3,22 +3,22 @@ package logic;
 public class Maze {
 	private char[][] lab;
 	private int SIZE;
-	private final Ponto exit;
+	private final Point exit;
 	public String labirinto;
 
 
 	
 	public Maze(){
-		Gerador gerador = new Gerador();
-		this.lab = gerador.gerarLabirintoPreset();
+		Generator gerador = new Generator();
+		this.lab = gerador.generateLabirinthPreset();
 		this.SIZE = 10;
 		exit = gerador.getExit();
 	}
 	
 	public Maze(int size){
-		Gerador gerador = new Gerador(size);
+		Generator gerador = new Generator(size);
 		this.SIZE = size;
-		this.lab = gerador.gerarLabirinto();
+		this.lab = gerador.generateLabirinth();
 		exit = gerador.getExit();
 	}
 
@@ -46,16 +46,15 @@ public class Maze {
 		return SIZE;
 	}
 
-	public void setSymbol(Ponto p, char sym){
+	public void setSymbol(Point p, char sym){
 		lab[p.getYpos()][p.getXpos()] = sym;
 	}
 	
-
 	public char[][] getLab() {
 		return lab;
 	}
 
-	public Ponto getExit(){
+	public Point getExit(){
 		return exit;
 	}
 

@@ -1,5 +1,6 @@
 package logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -10,33 +11,32 @@ import java.util.Random;
  * @author PedroBarbosa
  *
  */
-public class EstadoJogo {
+public class GameState{
 	private Maze labirinto;
-	private Heroi heroi;
+	private Hero hero;
 	private int SIZE;
-	private Dragao dragao;
-	private Espada espada;
-	private Escudo escudo;
-	private Dardo dardo;
-	private ArrayList<Elemento> elementos = new ArrayList<Elemento>();
-	private ArrayList<Dragao> dragoes = new ArrayList<Dragao>();
+	private Dragon dragon;
+	private Sword sword;
+	private Shield shield;
+	private Dard dard;
+	private ArrayList<Element> elements = new ArrayList<Element>();
+	private ArrayList<Dragon> dragons = new ArrayList<Dragon>();
 	private boolean state;
 	private int difficulty; 
 
 
 	
-	
 	/**
 	 * Simple constructor.
 	 */
-	public EstadoJogo(){
+	public GameState(){
 	}
 	/**
 	 * Returns the hero object of this gamestate.
-	 * @return Heroi
+	 * @return hero
 	 */
-	public Heroi getHero(){
-		return heroi;
+	public Hero getHero(){
+		return hero;
 	}
 	/**
 	 * Returns the maze object.
@@ -56,8 +56,8 @@ public class EstadoJogo {
 	 * Sets the hero for this gamestate.
 	 * @param h - hero
 	 */
-	public void setHeroi(Heroi h){
-		heroi = h;
+	public void setHero(Hero h){
+		hero = h;
 	}
 	/**
 	 * Returns the state of this gamestate.
@@ -110,27 +110,27 @@ public class EstadoJogo {
 	 * Adds elements to the gamestate.
 	 */
 	public void addElements(){
-		Heroi h = new Heroi('H',true,false);
-		heroi = h;
+		Hero h = new Hero('H',true,false);
+		hero = h;
 		h.setSymbolBelow(' ');
-		Espada s = new Espada('E',true);
-		Dardo dardo1 = new Dardo('/');
-		Dardo dardo2 = new Dardo('/');
+		Sword s = new Sword('E',true);
+		Dard dardo1 = new Dard('/');
+		Dard dardo2 = new Dard('/');
 		dardo1.generate(labirinto, labirinto.getSIZE());
 		dardo2.generate(labirinto, labirinto.getSIZE());
-		Escudo escudo = new Escudo('O');
+		Shield escudo = new Shield('O');
 		escudo.generate(labirinto, labirinto.getSIZE());
-		elementos.add(dardo1);
-		Dragao d = new Dragao('D',true,false);
-		Dragao d2 = new Dragao('D', true, false);
+		elements.add(dardo1);
+		Dragon d = new Dragon('D',true,false);
+		Dragon d2 = new Dragon('D', true, false);
 		s.generate(labirinto, labirinto.getSIZE());
-		elementos.add(s);
+		elements.add(s);
 		h.generate(labirinto, labirinto.getSIZE());
-		elementos.add(h); 
+		elements.add(h); 
 		d.generate(labirinto, labirinto.getSIZE());
-		dragoes.add(d);
+		dragons.add(d);
 		d2.generate(labirinto, labirinto.getSIZE());
-		dragoes.add(d2);
+		dragons.add(d2);
 	}
 	/**
 	 * Initiates a play.<p>
@@ -145,10 +145,10 @@ public class EstadoJogo {
 	 */
 	public boolean play(String s){
 		if(s.equalsIgnoreCase("f") ){
-			if(heroi.getDardNumber() > 0)
+			if(hero.getDardNumber() > 0)
 			{
 				this.shootDard();
-				labirinto.getLab()[heroi.getPonto().getYpos()][heroi.getPonto().getXpos()] = heroi.getSymbol();
+				labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos()] = hero.getSymbol();
 			}
 		}else{
 			this.moveHero(s.charAt(0));
@@ -160,9 +160,9 @@ public class EstadoJogo {
 					this.printGame();
 					return false;
 				}
-				if(heroi.hasShield() == false){
+				if(hero.hasShield() == false){
 					if(this.checkDragonRange() == true){
-						labirinto.getLab()[heroi.getPonto().getYpos()][heroi.getPonto().getXpos()] = ' ';
+						labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos()] = ' ';
 						this.printGame();
 						return false;
 					}
@@ -174,9 +174,9 @@ public class EstadoJogo {
 					this.printGame();
 					return false;
 				}
-				if(heroi.hasShield() == false){
+				if(hero.hasShield() == false){
 					if(this.checkDragonRange() == true){
-						labirinto.getLab()[heroi.getPonto().getYpos()][heroi.getPonto().getXpos()] = ' ';
+						labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos()] = ' ';
 						this.printGame();
 						return false;
 					}
@@ -199,54 +199,54 @@ public class EstadoJogo {
 		char nextChar = ' ';
 		int nextY = 0, nextX = 0;
 		int initialY, initialX;
-		initialX = heroi.getPonto().getXpos();
-		initialY = heroi.getPonto().getYpos();
+		initialX = hero.getPonto().getXpos();
+		initialY = hero.getPonto().getYpos();
 
 		switch(dir){
 		case 'w': case 'W':
-			nextChar = labirinto.getLab()[heroi.getPonto().getYpos() - 1][heroi.getPonto().getXpos()];
-			nextY = heroi.getPonto().getYpos() - 1;
+			nextChar = labirinto.getLab()[hero.getPonto().getYpos() - 1][hero.getPonto().getXpos()];
+			nextY = hero.getPonto().getYpos() - 1;
 			nextX = initialX;
 			break;
 		case 's': case 'S':
-			nextChar = labirinto.getLab()[heroi.getPonto().getYpos() + 1][heroi.getPonto().getXpos()];
-			nextY = heroi.getPonto().getYpos() + 1;
+			nextChar = labirinto.getLab()[hero.getPonto().getYpos() + 1][hero.getPonto().getXpos()];
+			nextY = hero.getPonto().getYpos() + 1;
 			nextX = initialX;
 			break;
 		case 'd': case 'D':
-			nextChar = labirinto.getLab()[heroi.getPonto().getYpos()][heroi.getPonto().getXpos() + 1];
-			initialX = heroi.getPonto().getXpos();
-			initialY = heroi.getPonto().getYpos();
-			nextX = heroi.getPonto().getXpos() + 1;
+			nextChar = labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos() + 1];
+			initialX = hero.getPonto().getXpos();
+			initialY = hero.getPonto().getYpos();
+			nextX = hero.getPonto().getXpos() + 1;
 			nextY = initialY;
 			break;
 		case 'a': case 'A':
-			nextChar = labirinto.getLab()[heroi.getPonto().getYpos()][heroi.getPonto().getXpos() - 1];
-			nextX = heroi.getPonto().getXpos() - 1;
+			nextChar = labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos() - 1];
+			nextX = hero.getPonto().getXpos() - 1;
 			nextY = initialY;
 			break;
 		}
-		if( (nextChar == ' ') || ( (nextChar == 'S') && (heroi.getSymbol() == 'A' || heroi.getSymbol() == Heroi.heroDardAndShieldAndSword  || heroi.getSymbol() == Heroi.heroSwordAndShield || heroi.getSymbol() == Heroi.heroDardAndSword) ) || (nextChar == 'E') || (nextChar == '/') || (nextChar == 'O')){
-			heroi.setPosition(nextX, nextY);
+		if( (nextChar == ' ') || ( (nextChar == 'S') && (hero.getSymbol() == 'A' || hero.getSymbol() == Hero.heroDardAndShieldAndSword  || hero.getSymbol() == Hero.heroSwordAndShield || hero.getSymbol() == Hero.heroDardAndSword) ) || (nextChar == 'E') || (nextChar == '/') || (nextChar == 'O')){
+			hero.setPosition(nextX, nextY);
 			if(nextChar == 'E'){
-				heroi.setWeaponSymbol('E');
-				heroi.setWeapon(true);
-				heroi.setSymbolBelow(' ');
+				hero.setWeaponSymbol('E');
+				hero.setWeapon(true);
+				hero.setSymbolBelow(' ');
 				this.removeElement("Espada", initialX,  initialY);
 			}
 			if(nextChar == '/'){
-				heroi.incDards();
-				heroi.setWeaponSymbol('/');
-				heroi.setSymbolBelow(' ');
+				hero.incDards();
+				hero.setWeaponSymbol('/');
+				hero.setSymbolBelow(' ');
 				this.removeElement("Dardo", initialX,  initialY);
 			}
 			if(nextChar == 'O'){
-				heroi.setWeaponSymbol('O');
-				heroi.setSymbolBelow(' ');
+				hero.setWeaponSymbol('O');
+				hero.setSymbolBelow(' ');
 				this.removeElement("Escudo", initialX,  initialY);
 			}
-			labirinto.getLab()[initialY][initialX] = heroi.getSymbolBelow();
-			labirinto.getLab()[nextY][nextX] = heroi.getSymbol();
+			labirinto.getLab()[initialY][initialX] = hero.getSymbolBelow();
+			labirinto.getLab()[nextY][nextX] = hero.getSymbol();
 		}
 	}
 	/**
@@ -255,8 +255,8 @@ public class EstadoJogo {
 	 * reach dies and is removed from play.
 	 */
 	public void shootDard(){
-		int x_init = heroi.getPonto().getXpos();
-		int y_init = heroi.getPonto().getYpos();
+		int x_init = hero.getPonto().getXpos();
+		int y_init = hero.getPonto().getYpos();
 		int y = y_init;
 		int x = x_init;
 
@@ -265,8 +265,8 @@ public class EstadoJogo {
 			while(y > 0){
 				if(labirinto.getLab()[y][x] == 'X')
 					break;
-				if(labirinto.getLab()[y][x] == Dragao.activeSymbol || labirinto.getLab()[y][x] == Dragao.sleepSymbol 
-						|| labirinto.getLab()[y][x] == Dragao.asleepSymbolInSword || labirinto.getLab()[y][x] == Dragao.swordDragon ){
+				if(labirinto.getLab()[y][x] == Dragon.activeSymbol || labirinto.getLab()[y][x] == Dragon.sleepSymbol 
+						|| labirinto.getLab()[y][x] == Dragon.asleepSymbolInSword || labirinto.getLab()[y][x] == Dragon.swordDragon ){
 					labirinto.getLab()[y][x] = ' ';
 					this.removeElement("Dragao", x, y);
 					break;
@@ -281,8 +281,8 @@ public class EstadoJogo {
 			while(y < labirinto.getSIZE()-1){
 				if(labirinto.getLab()[y][x] == 'X')
 					break;
-				if(labirinto.getLab()[y][x] == Dragao.activeSymbol || labirinto.getLab()[y][x] == Dragao.sleepSymbol 
-						|| labirinto.getLab()[y][x] == Dragao.asleepSymbolInSword || labirinto.getLab()[y][x] == Dragao.swordDragon ){
+				if(labirinto.getLab()[y][x] == Dragon.activeSymbol || labirinto.getLab()[y][x] == Dragon.sleepSymbol 
+						|| labirinto.getLab()[y][x] == Dragon.asleepSymbolInSword || labirinto.getLab()[y][x] == Dragon.swordDragon ){
 					labirinto.getLab()[y][x] = ' ';
 					this.removeElement("Dragao", x, y);
 					break;
@@ -297,8 +297,8 @@ public class EstadoJogo {
 			while(x > 0){
 				if(labirinto.getLab()[y][x] == 'X')
 					break;
-				if(labirinto.getLab()[y][x] == Dragao.activeSymbol || labirinto.getLab()[y][x] == Dragao.sleepSymbol 
-						|| labirinto.getLab()[y][x] == Dragao.asleepSymbolInSword || labirinto.getLab()[y][x] == Dragao.swordDragon ){
+				if(labirinto.getLab()[y][x] == Dragon.activeSymbol || labirinto.getLab()[y][x] == Dragon.sleepSymbol 
+						|| labirinto.getLab()[y][x] == Dragon.asleepSymbolInSword || labirinto.getLab()[y][x] == Dragon.swordDragon ){
 					labirinto.getLab()[y][x] = ' ';
 					this.removeElement("Dragao", x, y);
 					break;
@@ -313,8 +313,8 @@ public class EstadoJogo {
 			while(x < labirinto.getSIZE()-1){
 				if(labirinto.getLab()[y][x] == 'X')
 					break;
-				if(labirinto.getLab()[y][x] == Dragao.activeSymbol || labirinto.getLab()[y][x] == Dragao.sleepSymbol 
-						|| labirinto.getLab()[y][x] == Dragao.asleepSymbolInSword || labirinto.getLab()[y][x] == Dragao.swordDragon ){
+				if(labirinto.getLab()[y][x] == Dragon.activeSymbol || labirinto.getLab()[y][x] == Dragon.sleepSymbol 
+						|| labirinto.getLab()[y][x] == Dragon.asleepSymbolInSword || labirinto.getLab()[y][x] == Dragon.swordDragon ){
 					labirinto.getLab()[y][x] = ' ';
 					this.removeElement("Dragao", x, y);
 					break;
@@ -322,7 +322,7 @@ public class EstadoJogo {
 				x++;
 			}
 		}
-		heroi.consumeDrad();
+		hero.consumeDrad();
 	}
 	/**
 	 * Checks if the hero is adjacent to one or more dragons.<br>
@@ -333,24 +333,24 @@ public class EstadoJogo {
 	 * 		   2 - if hero kills dragons
 	 */
 	public int checkCollisionWithDragon(){
-		char sul = labirinto.getLab()[heroi.getPonto().getYpos() + 1][heroi.getPonto().getXpos()];
-		char norte = labirinto.getLab()[heroi.getPonto().getYpos() - 1][heroi.getPonto().getXpos()];
-		char este = labirinto.getLab()[heroi.getPonto().getYpos()][heroi.getPonto().getXpos() + 1];
-		char oeste = labirinto.getLab()[heroi.getPonto().getYpos()][heroi.getPonto().getXpos() - 1];
+		char sul = labirinto.getLab()[hero.getPonto().getYpos() + 1][hero.getPonto().getXpos()];
+		char norte = labirinto.getLab()[hero.getPonto().getYpos() - 1][hero.getPonto().getXpos()];
+		char este = labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos() + 1];
+		char oeste = labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos() - 1];
 
 		if( (sul == 'D') || (norte == 'D') || (este == 'D') || (oeste == 'D') ||
 				(sul == 'd') || (norte == 'd') || (este == 'd') || (oeste == 'd') ||
 				(sul == 'F') || (norte == 'F') || (este == 'F') || (oeste == 'F') ||
 				(sul == 'f') || (norte == 'f') || (este == 'f') || (oeste == 'f')){
-			if( heroi.getSymbol() == Heroi.armedSymbol || heroi.getSymbol() == Heroi.heroDardAndSword || heroi.getSymbol() == Heroi.heroSwordAndShield || heroi.getSymbol() == Heroi.heroDardAndShieldAndSword){
-				dragao.setState(false);
+			if( hero.getSymbol() == Hero.armedSymbol || hero.getSymbol() == Hero.heroDardAndSword || hero.getSymbol() == Hero.heroSwordAndShield || hero.getSymbol() == Hero.heroDardAndShieldAndSword){
+				dragon.setState(false);
 				killAdjacentDragons(norte, sul, este, oeste);
 				return 0;
 			}
-			else if( (heroi.getSymbol() == Heroi.heroDisarmedSymbol) && ((sul == 'D') || (norte == 'D') || (este == 'D') || (oeste == 'D') || (sul == 'F') || (norte == 'F') || (este == 'F') || (oeste == 'F'))) {				
-				labirinto.getLab()[heroi.getPonto().getYpos()][heroi.getPonto().getXpos()] = ' ';
-				heroi.setSymbol(' ');
-				heroi.setState(false);
+			else if( (hero.getSymbol() == Hero.heroDisarmedSymbol) && ((sul == 'D') || (norte == 'D') || (este == 'D') || (oeste == 'D') || (sul == 'F') || (norte == 'F') || (este == 'F') || (oeste == 'F'))) {				
+				labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos()] = ' ';
+				hero.setSymbol(' ');
+				hero.setState(false);
 				this.printGame();
 				return 1;
 			}
@@ -364,14 +364,14 @@ public class EstadoJogo {
 	 * @param y y coordinate
 	 */
 	public void removeElement(String tipo, int x, int y){
-		for(int i = 0; i < elementos.size(); i++){
-			if( elementos.get(i).toString().equals("Espada") && elementos.get(i).getPonto().getXpos() == x && elementos.get(i).getPonto().getYpos() == y){
-				elementos.remove(i);
+		for(int i = 0; i < elements.size(); i++){
+			if( elements.get(i).toString().equals("Espada") && elements.get(i).getPonto().getXpos() == x && elements.get(i).getPonto().getYpos() == y){
+				elements.remove(i);
 			}
 		}
-		for(int i = 0; i < dragoes.size(); i++){
-			if( dragoes.get(i).toString().equals("Dragao") && dragoes.get(i).getPonto().getXpos() == x && dragoes.get(i).getPonto().getYpos() == y){
-				dragoes.remove(i);
+		for(int i = 0; i < dragons.size(); i++){
+			if( dragons.get(i).toString().equals("Dragao") && dragons.get(i).getPonto().getXpos() == x && dragons.get(i).getPonto().getYpos() == y){
+				dragons.remove(i);
 			}
 		}
 	}
@@ -380,12 +380,12 @@ public class EstadoJogo {
 	 * For each dragon it calls the function moveDragao(Dragao d). 
 	 */
 	public void moveDragons(){
-		for(int i = 0; i < dragoes.size(); i++){
-			if( dragoes.get(i).toString().equals("Dragao")){
+		for(int i = 0; i < dragons.size(); i++){
+			if( dragons.get(i).toString().equals("Dragao")){
 				if(difficulty == 3){
-					dragoes.get(i).incCounter();
+					dragons.get(i).incCounter();
 				}
-				this.moveDragao(dragoes.get(i));
+				this.moveDragao(dragons.get(i));
 			}
 		}
 	}
@@ -397,7 +397,7 @@ public class EstadoJogo {
 	 * 		   1 - invalid movement because of wall<br>
 	 * 		   2 - invalid movement because of other dragon
 	 */
-	public int validMovementDragon(int dir, Dragao d){
+	public int validMovementDragon(int dir, Dragon d){
 		char sul = labirinto.getLab()[d.getPonto().getYpos() + 1][d.getPonto().getXpos()];
 		char norte = labirinto.getLab()[d.getPonto().getYpos() - 1][d.getPonto().getXpos()];
 		char este = labirinto.getLab()[d.getPonto().getYpos()][d.getPonto().getXpos() + 1];
@@ -431,7 +431,7 @@ public class EstadoJogo {
 	 * Moves a dragon in a random valid direction
 	 * @param d dragon to move
 	 */
-	public void moveDragao(Dragao d){
+	public void moveDragao(Dragon d){
 		char nextChar = ' ';
 		int valid;
 		int nextY = 0, nextX = 0;
@@ -498,21 +498,21 @@ public class EstadoJogo {
 	 * @param oeste west position
 	 */
 	public void killAdjacentDragons(char norte, char sul, char este, char oeste){
-		if( norte == Dragao.swordDragon || norte == Dragao.activeSymbol || norte == Dragao.asleepSymbolInSword || norte == Dragao.sleepSymbol ){
-			labirinto.getLab()[heroi.getPonto().getYpos() - 1][heroi.getPonto().getXpos()] = ' ';
-			removeElement("Dragao", heroi.getPonto().getXpos(), heroi.getPonto().getYpos() - 1);
+		if( norte == Dragon.swordDragon || norte == Dragon.activeSymbol || norte == Dragon.asleepSymbolInSword || norte == Dragon.sleepSymbol ){
+			labirinto.getLab()[hero.getPonto().getYpos() - 1][hero.getPonto().getXpos()] = ' ';
+			removeElement("Dragao", hero.getPonto().getXpos(), hero.getPonto().getYpos() - 1);
 		}
-		else if( sul == Dragao.swordDragon || sul == Dragao.activeSymbol || sul == Dragao.asleepSymbolInSword || sul == Dragao.sleepSymbol){
-			labirinto.getLab()[heroi.getPonto().getYpos() + 1][heroi.getPonto().getXpos()] = ' ';
-			removeElement("Dragao", heroi.getPonto().getXpos(), heroi.getPonto().getYpos() + 1);
+		else if( sul == Dragon.swordDragon || sul == Dragon.activeSymbol || sul == Dragon.asleepSymbolInSword || sul == Dragon.sleepSymbol){
+			labirinto.getLab()[hero.getPonto().getYpos() + 1][hero.getPonto().getXpos()] = ' ';
+			removeElement("Dragao", hero.getPonto().getXpos(), hero.getPonto().getYpos() + 1);
 		}
-		else if( este == Dragao.swordDragon || este == Dragao.activeSymbol || este == Dragao.asleepSymbolInSword || este == Dragao.sleepSymbol){
-			labirinto.getLab()[heroi.getPonto().getYpos()][heroi.getPonto().getXpos() + 1] = ' ';
-			removeElement("Dragao", heroi.getPonto().getXpos() + 1, heroi.getPonto().getYpos());
+		else if( este == Dragon.swordDragon || este == Dragon.activeSymbol || este == Dragon.asleepSymbolInSword || este == Dragon.sleepSymbol){
+			labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos() + 1] = ' ';
+			removeElement("Dragao", hero.getPonto().getXpos() + 1, hero.getPonto().getYpos());
 		}
-		else if( oeste == Dragao.swordDragon || oeste == Dragao.activeSymbol || oeste == Dragao.asleepSymbolInSword || oeste == Dragao.sleepSymbol){
-			labirinto.getLab()[heroi.getPonto().getYpos()][heroi.getPonto().getXpos() - 1] = ' ';
-			removeElement("Dragao", heroi.getPonto().getXpos() - 1, heroi.getPonto().getYpos());
+		else if( oeste == Dragon.swordDragon || oeste == Dragon.activeSymbol || oeste == Dragon.asleepSymbolInSword || oeste == Dragon.sleepSymbol){
+			labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos() - 1] = ' ';
+			removeElement("Dragao", hero.getPonto().getXpos() - 1, hero.getPonto().getYpos());
 		}
 
 	}
@@ -522,7 +522,7 @@ public class EstadoJogo {
 	 * 		   false - if hero is not in the exit
 	 */
 	public boolean checkFinal(){
-		if(labirinto.getExit().getXpos() == heroi.getPonto().getXpos() && labirinto.getExit().getYpos() == heroi.getPonto().getYpos()){
+		if(labirinto.getExit().getXpos() == hero.getPonto().getXpos() && labirinto.getExit().getYpos() == hero.getPonto().getYpos()){
 			return true;
 		}
 		else
@@ -534,8 +534,8 @@ public class EstadoJogo {
 	 * 		   false - if hero isn't in range
 	 */
 	public boolean checkDragonRange(){
-		int x_init = heroi.getPonto().getXpos();
-		int y_init = heroi.getPonto().getYpos();
+		int x_init = hero.getPonto().getXpos();
+		int y_init = hero.getPonto().getYpos();
 		int y = y_init;
 		int x = x_init;
 		int i = 0;
@@ -545,7 +545,7 @@ public class EstadoJogo {
 			while(i < 3 && y > 0){
 				if(labirinto.getLab()[y][x] == 'X')
 					break;
-				if(labirinto.getLab()[y][x] == Dragao.activeSymbol  || labirinto.getLab()[y][x] == Dragao.swordDragon ){
+				if(labirinto.getLab()[y][x] == Dragon.activeSymbol  || labirinto.getLab()[y][x] == Dragon.swordDragon ){
 					return true;
 				}
 				y--;
@@ -560,7 +560,7 @@ public class EstadoJogo {
 			while(i < 3 && y < labirinto.getSIZE()-1){
 				if(labirinto.getLab()[y][x] == 'X')
 					break;
-				if(labirinto.getLab()[y][x] == Dragao.activeSymbol  || labirinto.getLab()[y][x] == Dragao.swordDragon ){
+				if(labirinto.getLab()[y][x] == Dragon.activeSymbol  || labirinto.getLab()[y][x] == Dragon.swordDragon ){
 					return true;
 				}
 				y++;
@@ -575,8 +575,8 @@ public class EstadoJogo {
 			while(i < 3 && x > 0){
 				if(labirinto.getLab()[y][x] == 'X')
 					break;
-				if(labirinto.getLab()[y][x] == Dragao.activeSymbol || labirinto.getLab()[y][x] == Dragao.sleepSymbol 
-						|| labirinto.getLab()[y][x] == Dragao.asleepSymbolInSword || labirinto.getLab()[y][x] == Dragao.swordDragon ){
+				if(labirinto.getLab()[y][x] == Dragon.activeSymbol || labirinto.getLab()[y][x] == Dragon.sleepSymbol 
+						|| labirinto.getLab()[y][x] == Dragon.asleepSymbolInSword || labirinto.getLab()[y][x] == Dragon.swordDragon ){
 					labirinto.getLab()[y][x] = ' ';
 					this.removeElement("Dragao", x, y);
 					break;
@@ -593,7 +593,7 @@ public class EstadoJogo {
 			while(i < 3 && x < labirinto.getSIZE()-1){
 				if(labirinto.getLab()[y][x] == 'X')
 					break;
-				if(labirinto.getLab()[y][x] == Dragao.activeSymbol  || labirinto.getLab()[y][x] == Dragao.swordDragon ){
+				if(labirinto.getLab()[y][x] == Dragon.activeSymbol  || labirinto.getLab()[y][x] == Dragon.swordDragon ){
 					return true;
 				}
 				x++;
@@ -612,12 +612,12 @@ public class EstadoJogo {
 	 * @param initialX initial x coordinate
 	 * @param initialY initial y coordinate
 	 */
-	public void moveDragaoDirection(Dragao d, char nextChar, int nextX, int nextY, int initialX, int initialY){
+	public void moveDragaoDirection(Dragon d, char nextChar, int nextX, int nextY, int initialX, int initialY){
 		if (nextChar == 'E'){
-			d.setSymbol(Dragao.swordDragon);
+			d.setSymbol(Dragon.swordDragon);
 		}
 		else if(nextChar == ' '){
-			d.setSymbol(Dragao.activeSymbol);
+			d.setSymbol(Dragon.activeSymbol);
 		}
 		d.setPosition(nextX, nextY);
 		labirinto.getLab()[initialY][initialX] = d.getSymbolBelow();
@@ -630,28 +630,32 @@ public class EstadoJogo {
 		}
 	}
 
-
+	
+	
+	
+	
+	
 	///////////////JUNIT////////////////////////////
 	/**
 	 * [JUNIT function] - Returns dragon
 	 * @return test dragon
 	 */
-	public Dragao getDragao(){
-		return dragao;
+	public Dragon getDragao(){
+		return dragon;
 	}
 	/**
 	 * [JUNIT function] - Returns espada
 	 * @return test sword
 	 */
-	public Espada getEspada(){
-		return espada;
+	public Sword getEspada(){
+		return sword;
 	}
 	/**
 	 * [JUNIT function] - Sets dragao
 	 * @param d test dragon
 	 */
-	public void setDragao(Dragao d){
-		dragao = d;
+	public void setDragao(Dragon d){
+		dragon = d;
 	}
 	/**
 	 * [JUNIT function] - Initiates elements for JUNIT tests
@@ -660,33 +664,33 @@ public class EstadoJogo {
 		this.labirinto = new Maze();
 		this.labirinto.getExitCoord();
 		this.state = true;
-		Heroi h = new Heroi('H',true,false);
-		heroi = h;
-		Ponto ph = new Ponto(1,1);
-		heroi.setPonto(ph);
-		heroi.setSymbolBelow(' ');
-		Espada s = new Espada('E',true);
-		espada = s;
-		Ponto ps = new Ponto(1,8);
-		espada.setPonto(ps);
-		Dragao d = new Dragao('D',true,false);
-		dragao = d;
-		Ponto pd = new Ponto(1,3);
-		dragao.setPonto(pd);
-		Ponto pe= new Ponto (3,1);
-		Escudo e=new Escudo('O');
-		escudo=e;
+		Hero h = new Hero('H',true,false);
+		hero = h;
+		Point ph = new Point(1,1);
+		hero.setPonto(ph);
+		hero.setSymbolBelow(' ');
+		Sword s = new Sword('E',true);
+		sword = s;
+		Point ps = new Point(1,8);
+		sword.setPonto(ps);
+		Dragon d = new Dragon('D',true,false);
+		dragon = d;
+		Point pd = new Point(1,3);
+		dragon.setPonto(pd);
+		Point pe= new Point (3,1);
+		Shield e=new Shield('O');
+		shield=e;
 		e.setPonto(pe);
-		Ponto pda = new Ponto (5,2);
-		Dardo da=new Dardo('/');
-		dardo=da;
+		Point pda = new Point (5,2);
+		Dard da=new Dard('/');
+		dard=da;
 		da.setPonto(pda);
 		//set symbols on maze
-		labirinto.setSymbol(ph, heroi.getSymbol());
-		labirinto.setSymbol(ps, espada.getSymbol());
-		labirinto.setSymbol(pd, dragao.getSymbol());
-		labirinto.setSymbol(pe, escudo.getSymbol());
-		labirinto.setSymbol(pda, dardo.getSymbol());
+		labirinto.setSymbol(ph, hero.getSymbol());
+		labirinto.setSymbol(ps, sword.getSymbol());
+		labirinto.setSymbol(pd, dragon.getSymbol());
+		labirinto.setSymbol(pe, shield.getSymbol());
+		labirinto.setSymbol(pda, dard.getSymbol());
 	}
 
 }

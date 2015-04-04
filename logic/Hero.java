@@ -1,7 +1,7 @@
 package logic;
 
 
-public class Heroi extends Elemento{
+public class Hero extends Element{
 
 	private boolean state; //true- alive, false- dead
 	private boolean weapon; //true- armado, false- desarmado
@@ -16,7 +16,7 @@ public class Heroi extends Elemento{
 	public static char heroSwordAndShield = 'P';
 	public static char heroDardAndShieldAndSword = '#';
 
-	public Heroi (char sym, boolean state, boolean weapon)
+	public Hero (char sym, boolean state, boolean weapon)
 	{
 		super(sym);
 		this.symbol = sym;

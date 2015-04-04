@@ -1,15 +1,15 @@
 package logic;
 
-public class Ponto {
+public class Point {
 	
 	private int xpos;
 	private int ypos;
 	
-	public Ponto(){
+	public Point(){
 		
 	}
 	
-	public Ponto (int xpos, int ypos)
+	public Point (int xpos, int ypos)
 	{
 		this.xpos=xpos;
 		this.ypos=ypos;

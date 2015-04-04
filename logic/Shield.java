@@ -1,9 +1,9 @@
 package logic;
 
-public class Escudo extends Elemento{
+public class Shield extends Element{
 	
 	
-	public Escudo(char symbol) {
+	public Shield(char symbol) {
 		super(symbol);
 	}
 	

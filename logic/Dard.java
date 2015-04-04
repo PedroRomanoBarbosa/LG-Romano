@@ -7,9 +7,9 @@ package logic;
  * @author PedroBarbosa
  *
  */
-public class Dardo extends Elemento{
+public class Dard extends Element{
 	
-	public Dardo(char symbol) {
+	public Dard(char symbol) {
 		super(symbol);
 	}
 	

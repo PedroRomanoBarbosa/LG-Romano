@@ -8,10 +8,10 @@ import java.util.Random;
  * 
  * @author PedroBarbosa
  *
- */
-public class Elemento {
+ */ 
+public class Element {
 
-	protected Ponto ponto;
+	protected Point point;
 	protected char symbol;
 	protected char symbolBelow;
 
@@ -20,18 +20,18 @@ public class Elemento {
 	 * Creates a new Element object.
 	 * @param symbol symbol of the element
 	 */
-	public Elemento(char symbol){
+	public Element(char symbol){
 		this.symbol = symbol;
-		this.ponto = new Ponto();
+		this.point = new Point();
 	}
 	/**
 	 * Class constructor with symbol and coordinates.
 	 * @param p point with coordinates
 	 * @param symbol symbol of the element
 	 */
-	public Elemento (Ponto p, char symbol)
+	public Element (Point p, char symbol)
 	{
-		this.ponto=p;
+		this.point=p;
 		this.symbol=symbol;
 	}
 	/**
@@ -52,15 +52,15 @@ public class Elemento {
 	 * Return point with element's coordinates.
 	 * @return ponto
 	 */
-	public Ponto getPonto() {
-		return ponto;
+	public Point getPonto() {
+		return point;
 	}
 	/**
 	 * Sets element point with coordinates
 	 * @param ponto point with element's coordinates
 	 */
-	public void setPonto(Ponto ponto) {
-		this.ponto = ponto;
+	public void setPonto(Point ponto) {
+		this.point = ponto;
 	}
 	/**
 	 * Sets element's coordinates in element's point.
@@ -68,8 +68,8 @@ public class Elemento {
 	 * @param y y coordinate
 	 */
 	public void setPosition(int x, int y){
-		this.ponto.setXpos(x);
-		this.ponto.setYpos(y);
+		this.point.setXpos(x);
+		this.point.setYpos(y);
 	}
 	/**
 	 * Returns element's symbol.
@@ -128,8 +128,8 @@ public class Elemento {
 					counter++;
 					if(counter == pos){
 						maze[y][x] = symbol;
-						this.ponto.setXpos(x);
-						this.ponto.setYpos(y);
+						this.point.setXpos(x);
+						this.point.setYpos(y);
 					}
 				}
 

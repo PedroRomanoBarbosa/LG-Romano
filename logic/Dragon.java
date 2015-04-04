@@ -9,7 +9,7 @@ import java.util.Random;
  * @author PedroBarbosa
  *
  */
-public class Dragao extends Elemento{
+public class Dragon extends Element{
 
 	private boolean state; 
 	private boolean active; 
@@ -34,7 +34,7 @@ public class Dragao extends Elemento{
 	 * 					   true - on top of sword<br>
 	 * 					   false - not on top of sword
 	 */
-	public Dragao(char sym, boolean state, boolean espadaDragao)
+	public Dragon(char sym, boolean state, boolean espadaDragao)
 	{
 		super(sym);
 		this.state=state;
@@ -94,7 +94,7 @@ public class Dragao extends Elemento{
 				if(maze[y][x] == ' ' ){
 					counter++;
 				}
-				if(maze[y][x] == Heroi.heroDisarmedSymbol){
+				if(maze[y][x] == Hero.heroDisarmedSymbol){
 					if(maze[y-1][x] == ' '){
 						invalidCounter++;
 					}
@@ -118,13 +118,13 @@ public class Dragao extends Elemento{
 		for(int y = 0; y < size; y++){
 			for(int x = 0; x < size; x++){
 				if(maze[y][x] == ' ' ){
-					if(maze[y-1][x] != Heroi.heroDisarmedSymbol && maze[y+1][x] != Heroi.heroDisarmedSymbol  &&  maze[y][x-1] != Heroi.heroDisarmedSymbol && maze[y][x+1] != Heroi.heroDisarmedSymbol){
+					if(maze[y-1][x] != Hero.heroDisarmedSymbol && maze[y+1][x] != Hero.heroDisarmedSymbol  &&  maze[y][x-1] != Hero.heroDisarmedSymbol && maze[y][x+1] != Hero.heroDisarmedSymbol){
 						counter++;
 						if(counter == pos){
 							maze[y][x] = this.symbol;
 							this.symbolBelow = ' ';
-							this.ponto.setXpos(x);
-							this.ponto.setYpos(y);
+							this.point.setXpos(x);
+							this.point.setYpos(y);
 							break;
 						}
 					}

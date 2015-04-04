@@ -3,9 +3,9 @@ package test;
 import static org.junit.Assert.*;
 
 
-import logic.Dragao;
-import logic.EstadoJogo;
-import logic.Heroi;
+import logic.Dragon;
+import logic.GameState;
+import logic.Hero;
 import logic.Maze;
 
 import org.junit.Test;
@@ -14,8 +14,8 @@ public class TestLabirinto {
 	@Test
 	public void testMovimentoHeroi()
 	{
-		Heroi h1;
-		EstadoJogo j1=new EstadoJogo();
+		Hero h1;
+		GameState j1=new GameState();
 		j1.iniciar();
 		h1=j1.getHero();
 		j1.moveHero('s');
@@ -25,8 +25,8 @@ public class TestLabirinto {
 	@Test
 	public void testHeroiImovel()
 	{
-		Heroi h1;
-		EstadoJogo j1=new EstadoJogo();
+		Hero h1;
+		GameState j1=new GameState();
 		j1.iniciar();
 		h1=j1.getHero();
 		j1.moveHero('w');
@@ -37,8 +37,8 @@ public class TestLabirinto {
 	public void testApanharEspada()
 	{
 		Maze m1;
-		Heroi h1;
-		EstadoJogo j1=new EstadoJogo();
+		Hero h1;
+		GameState j1=new GameState();
 		j1.iniciar();
 		m1=j1.getMaze();
 		h1=j1.getHero();
@@ -61,8 +61,8 @@ public class TestLabirinto {
 	public void testDerrota()
 	{
 		Maze m1;
-		Heroi h1;
-		EstadoJogo j1=new EstadoJogo();
+		Hero h1;
+		GameState j1=new GameState();
 		j1.iniciar();
 		m1=j1.getMaze();
 		h1=j1.getHero();
@@ -77,9 +77,9 @@ public class TestLabirinto {
 	public void testMatarDragao()
 	{
 		Maze m1;
-		Heroi h1;
-		Dragao d1;
-		EstadoJogo j1=new EstadoJogo();
+		Hero h1;
+		Dragon d1;
+		GameState j1=new GameState();
 		j1.iniciar();
 		m1=j1.getMaze();
 		h1=j1.getHero();
@@ -108,9 +108,9 @@ public class TestLabirinto {
 	public void testVitoria()
 	{
 		Maze m1;
-		Heroi h1;
-		Dragao d1;
-		EstadoJogo j1 = new EstadoJogo();
+		Hero h1;
+		Dragon d1;
+		GameState j1 = new GameState();
 		j1.iniciar();
 		m1=j1.getMaze();
 		h1=j1.getHero();
@@ -158,9 +158,9 @@ public class TestLabirinto {
 	{
 		
 		Maze m1;
-		Heroi h1;
-		Dragao d1;
-		EstadoJogo j1=new EstadoJogo();
+		Hero h1;
+		Dragon d1;
+		GameState j1=new GameState();
 		j1.iniciar();
 		m1=j1.getMaze();
 		h1=j1.getHero();
@@ -184,7 +184,7 @@ public class TestLabirinto {
 	@Test 
 	public void testMoveDragao()
 	{
-		EstadoJogo e = new EstadoJogo();
+		GameState e = new GameState();
 		e.iniciar();
 		e.moveDragaoDirection(e.getDragao(), ' ', 1, 4, 1, 3);
 		e.moveDragaoDirection(e.getDragao(), ' ', 1, 5, 1, 4);
@@ -198,10 +198,10 @@ public class TestLabirinto {
 	@Test 
 	public void testDragaoDormir()
 	{
-		EstadoJogo e = new EstadoJogo();
-		Dragao d = new Dragao('D',true,false);
-		Heroi h = new Heroi('H',true,false);
-		e.setHeroi(h);
+		GameState e = new GameState();
+		Dragon d = new Dragon('D',true,false);
+		Hero h = new Hero('H',true,false);
+		e.setHero(h);
 		e.setDragao(d);
 		
 	}
@@ -220,8 +220,8 @@ public class TestLabirinto {
 	public void testApanhaEscudo()
 	{
 		Maze m1;
-		Heroi h1;
-		EstadoJogo j1=new EstadoJogo();
+		Hero h1;
+		GameState j1=new GameState();
 		j1.iniciar();
 		m1=j1.getMaze();
 		h1=j1.getHero();
@@ -233,8 +233,8 @@ public class TestLabirinto {
 	public void testApanhaDardos()
 	{
 		Maze m1;
-		Heroi h1;
-		EstadoJogo j1=new EstadoJogo();
+		Hero h1;
+		GameState j1=new GameState();
 		j1.iniciar();
 		m1=j1.getMaze();
 		h1=j1.getHero();
@@ -252,8 +252,8 @@ public class TestLabirinto {
 	public void testLancaDardos()
 	{
 		Maze m1;
-		Heroi h1;
-		EstadoJogo j1=new EstadoJogo();
+		Hero h1;
+		GameState j1=new GameState();
 		j1.iniciar();
 		m1=j1.getMaze();
 		h1=j1.getHero();
@@ -276,7 +276,7 @@ public class TestLabirinto {
 	@Test 
 	public void testSaida()
 	{
-		EstadoJogo e = new EstadoJogo();
+		GameState e = new GameState();
 		e.initialize(11);
 		Maze m = e.getMaze();
 		boolean test = false;
@@ -293,9 +293,9 @@ public class TestLabirinto {
 	@Test 
 	public void testDragaoAleatorio()
 	{
-		EstadoJogo e = new EstadoJogo();
+		GameState e = new GameState();
 		e.initialize(11);
-		Dragao d = new Dragao('D', true,false);
+		Dragon d = new Dragon('D', true,false);
 		e.setDragao(d);
 		e.getDragao().generate(e.getMaze(), 11);
 		Maze m = e.getMaze();
@@ -313,10 +313,10 @@ public class TestLabirinto {
 	@Test 
 	public void testHeroiAleatorio()
 	{
-		EstadoJogo e = new EstadoJogo();
+		GameState e = new GameState();
 		e.initialize(11);
-		Heroi h = new Heroi('H', true,false);
-		e.setHeroi(h);
+		Hero h = new Hero('H', true,false);
+		e.setHero(h);
 		e.getHero().generate(e.getMaze(), 11);
 		Maze m = e.getMaze();
 		boolean test = false;

@@ -10,11 +10,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import logic.EstadoJogo;
+import logic.GameState;
 
 public class GameFrame implements ActionListener, KeyListener{
 
-	private EstadoJogo game;
+	private GameState game;
 	private JFrame frame;
 	private JPanel panel;
 	private JPanel panel2;
@@ -24,12 +24,15 @@ public class GameFrame implements ActionListener, KeyListener{
 	private int WIDTH = 750;
 	private int HEIGHT = 600;
 
-	public GameFrame(EstadoJogo g){
+	public GameFrame(GameState g){
 		game = g;
 		frame = new JFrame("D&D");
 		exit = new JButton("Exit Game");
+		exit.setFocusable(false);
 		restart = new JButton("Restart Game");
+		restart.setFocusable(false);
 		backToMain = new JButton("Back to Main Menu");
+		backToMain.setFocusable(false);
 		panel = new JPanel();
 		panel2 = new JPanel();
 		frame.addKeyListener(this);

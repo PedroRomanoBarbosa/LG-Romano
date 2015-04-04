@@ -3,20 +3,20 @@ package logic;
 import java.util.Random;
 import java.util.Stack;
 
-public class Gerador {
+public class Generator {
 	private Stack<int[]> backtrack = new Stack<int[]>();
 	private char[][] visitedCells;
 	private int visitedCellSIZE;
 	private int SIZE;
-	private Ponto exit;
+	private Point exit;
 
-	public Gerador(int size){
-		exit = new Ponto();
+	public Generator(int size){
+		exit = new Point();
 		this.SIZE = size;
 	}
 
-	public Gerador(){
-		exit = new Ponto();
+	public Generator(){
+		exit = new Point();
 		this.SIZE = 10;
 	}
 
@@ -28,16 +28,7 @@ public class Gerador {
 		SIZE = size;
 	}
 
-	public char[][] gerarLabirinto(){
-		/*
-		currentFrame = new JFrame("Labirinto");
-		currentFrame.setVisible(true);
-		currentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		currentFrame.setSize(700, 800);
-		currentPanel = new JPanel();
-		currentLabel = new JLabel();
-		currentLabel.setFont(new Font("Impact",Font.BOLD,28));
-		*/
+	public char[][] generateLabirinth(){
 		visitedCellSIZE = (SIZE-1)/2;
 
 		char[][] array= new char[visitedCellSIZE][visitedCellSIZE];
@@ -135,50 +126,6 @@ public class Gerador {
 		
 		//MAZE RECURSIVE BACKTRACK ALGORITHM
 		while(!backtrack.isEmpty()){
-			/*
-			String output = "<html><pre>";
-			for(int y = 0; y < SIZE; y++){
-				for(int x = 0; x < SIZE; x++){
-					if(temp[y][x] == 'X'){
-						output += "<font color=\"green\">";
-						output += temp[y][x];
-						output += "</font>";
-					}
-					else if(temp[y][x] == 'E'){
-						output += "<font color=\"yellow\">";
-						output += temp[y][x];
-						output += "</font>";
-					}
-					else if(temp[y][x] == 'S'){
-						output += "<font color=\"purple\">";
-						output += temp[y][x];
-						output += "</font>";
-					}
-					else if(temp[y][x] == 'H' || temp[y][x] == 'A'){
-						output += "<font color=\"blue\">";
-						output += temp[y][x];
-						output += "</font>";
-					}
-					else if(temp[y][x] == 'D' || temp[y][x] == 'D'){
-						output += "<font color=\"red\">";
-						output += temp[y][x];
-						output += "</font>";
-					}
-					else
-						output += temp[y][x];
-
-				}
-				output += "<br>";
-			}
-			output += "</pre></html>";
-			
-			/*
-			currentLabel.setText(output);
-			currentPanel.remove(currentLabel);
-			currentPanel.add(currentLabel);
-			currentFrame.add(currentPanel);
-			*/
-			
 			//check if its in dead end or not
 			boolean isAtDeadEnd = false;
 			//top row
@@ -309,7 +256,7 @@ public class Gerador {
 		return temp;
 	}
 
-	public char[][] gerarLabirintoPreset(){
+	public char[][] generateLabirinthPreset(){
 		char[][] temp = {{'X','X','X','X','X','X','X','X','X','X'},
 				 {'X',' ',' ',' ',' ',' ',' ',' ',' ','X'},
 				 {'X',' ','X','X',' ','X',' ','X',' ','X'},
@@ -325,7 +272,7 @@ public class Gerador {
 		return temp;
 	}
 	
-	public Ponto getExit(){
+	public Point getExit(){
 		return exit;
 	}
 	
