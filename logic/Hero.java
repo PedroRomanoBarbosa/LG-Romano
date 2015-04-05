@@ -88,7 +88,7 @@ public class Hero extends Element{
 		this.weapon = weapon;
 	}
 
-	public void consumeDrad(){
+	public void consumeDard(){
 		numDardos--;
 		if(numDardos == 0){
 			if(symbol == heroDard)

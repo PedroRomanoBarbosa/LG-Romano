@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Scanner;
 
 import logic.GameState;
@@ -109,11 +108,13 @@ public class Interface{
 	public static void writeToFile() throws FileNotFoundException, IOException{
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("save.bin"));
 		out.writeObject(game);
+		out.close();
 	}
 	
 	public static void readFile() throws FileNotFoundException, IOException, ClassNotFoundException{
 		ObjectInputStream in = new ObjectInputStream(new FileInputStream("save.bin"));
 		game = (GameState) in.readObject();
+		in.close();
 	}
 	
 	public static void printGame(){

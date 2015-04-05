@@ -314,7 +314,7 @@ public class GameState implements Serializable{
 				x++;
 			}
 		}
-		hero.consumeDrad();
+		hero.consumeDard();
 	}
 	/**
 	 * Checks if the hero is adjacent to one or more dragons.<br>
