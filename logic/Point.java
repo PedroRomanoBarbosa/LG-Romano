@@ -1,6 +1,8 @@
 package logic;
 
-public class Point {
+import java.io.Serializable;
+
+public class Point implements Serializable{
 	
 	private int xpos;
 	private int ypos;

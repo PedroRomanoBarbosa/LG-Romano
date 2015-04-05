@@ -1,6 +1,8 @@
 package logic;
 
-public class Maze {
+import java.io.Serializable;
+
+public class Maze implements Serializable{
 	private char[][] lab;
 	private int SIZE;
 	private final Point exit;

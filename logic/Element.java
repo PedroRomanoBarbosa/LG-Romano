@@ -1,5 +1,6 @@
 package logic;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Random;
  * @author PedroBarbosa
  *
  */ 
-public class Element {
+public class Element implements Serializable{
 
 	protected Point point;
 	protected char symbol;

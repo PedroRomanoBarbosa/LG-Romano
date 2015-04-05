@@ -14,6 +14,7 @@ import java.util.Random;
 public class GameState implements Serializable{
 	private Maze labirinto;
 	private Hero hero;
+	private boolean preset;
 	private int SIZE;
 	private Dragon dragon;
 	private Sword sword;
@@ -77,6 +78,7 @@ public class GameState implements Serializable{
 		this.labirinto.getExitCoord();
 		this.state = true;
 		SIZE = 10;
+		preset = true;
 	}
 	/**
 	 * Initializes the gamestate with a user defined board. Size must be an odd number.
@@ -87,6 +89,7 @@ public class GameState implements Serializable{
 		this.labirinto.getExitCoord();
 		this.state = true;
 		SIZE = size;
+		preset = false;
 	}
 	/**
 	 * Sets the difficulty of the game.
@@ -99,12 +102,6 @@ public class GameState implements Serializable{
 	 */
 	public void setDifficulty(int dif){
 		difficulty = dif;
-	}
-	/**
-	 * Prints labirinth to the console.
-	 */
-	public void printGame(){
-		labirinto.print();
 	}
 	/**
 	 * Adds elements to the gamestate.
@@ -157,13 +154,11 @@ public class GameState implements Serializable{
 			}
 			else{
 				if(this.checkCollisionWithDragon() == 1){
-					this.printGame();
 					return false;
 				}
 				if(hero.hasShield() == false){
 					if(this.checkDragonRange() == true){
 						labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos()] = ' ';
-						this.printGame();
 						return false;
 					}
 				}
@@ -171,19 +166,16 @@ public class GameState implements Serializable{
 					this.moveDragons();
 				}
 				if(this.checkCollisionWithDragon() == 1){
-					this.printGame();
 					return false;
 				}
 				if(hero.hasShield() == false){
 					if(this.checkDragonRange() == true){
 						labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos()] = ' ';
-						this.printGame();
 						return false;
 					}
 				}
 			}
 		}
-		this.printGame();
 		return state;
 	}
 	/**
@@ -351,7 +343,6 @@ public class GameState implements Serializable{
 				labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos()] = ' ';
 				hero.setSymbol(' ');
 				hero.setState(false);
-				this.printGame();
 				return 1;
 			}
 		}
@@ -629,10 +620,19 @@ public class GameState implements Serializable{
 			d.setSymbolBelow(' ');
 		}
 	}
-
-	
-	
-	
+	/**
+	 * This function restars the game. Creates a new<br>
+	 * maze and new element positions.
+	 */
+	public void restartGame(){
+		if(preset){
+			initialize();
+		}else{
+			initialize(SIZE);
+		}
+		addElements();
+		
+	}
 	
 	
 	///////////////JUNIT////////////////////////////

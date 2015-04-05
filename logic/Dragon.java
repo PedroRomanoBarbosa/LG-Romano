@@ -1,5 +1,4 @@
 package logic;
-
 import java.util.Random;
 
 /**

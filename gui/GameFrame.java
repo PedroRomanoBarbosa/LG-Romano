@@ -5,11 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import cli.Interface;
 import logic.GameState;
 
 public class GameFrame implements ActionListener, KeyListener{
@@ -21,8 +24,6 @@ public class GameFrame implements ActionListener, KeyListener{
 	private JButton exit, restart, backToMain;
 	private GridLayout buttonLayout;
 	private GridLayout mazeLayout, frameLayout;
-	private int WIDTH = 750;
-	private int HEIGHT = 600;
 
 	public GameFrame(GameState g){
 		game = g;
@@ -46,15 +47,16 @@ public class GameFrame implements ActionListener, KeyListener{
 
 		panel.setLayout(buttonLayout);
 		panel2.setLayout(mazeLayout);
-		
+
 		for(int y = 0; y < game.getSIZE(); y++){
 			for(int x = 0; x < game.getSIZE(); x++){
 				JLabel l = new JLabel(game.getMaze().getLab()[y][x] + "");
 				panel2.add(l);
 			}
 		}
-		
+
 		exit.addActionListener(this);
+		restart.addActionListener(this);
 		panel.add(exit);
 		panel.add(restart);
 		panel.add(backToMain);
@@ -62,14 +64,6 @@ public class GameFrame implements ActionListener, KeyListener{
 		frame.add(panel2);
 		frame.add(panel);
 		frame.pack();
-	}
-
-	public int getWidth(){
-		return WIDTH;
-	}
-
-	public int getHeigth(){
-		return HEIGHT;
 	}
 
 	public void update(){
@@ -83,11 +77,19 @@ public class GameFrame implements ActionListener, KeyListener{
 		panel2.validate();
 		frame.pack();
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == exit){
 			System.exit(0);
+		}
+		else if(e.getSource() == restart){
+			int option = JOptionPane.showConfirmDialog(null,"Do you really want to restart the game?","Warning",JOptionPane.INFORMATION_MESSAGE);
+			if(option == JOptionPane.YES_OPTION){
+				game.restartGame();
+				update();
+				Interface.printGame();
+			}
 		}
 	}
 
@@ -106,20 +108,17 @@ public class GameFrame implements ActionListener, KeyListener{
 		else if(c == 65){
 			game.play("a");
 		}
+		Interface.printGame();
 		this.update();
-		
+
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		
+	public void keyTyped(KeyEvent arg0) {
 	}
-
-
 
 }

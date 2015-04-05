@@ -1,5 +1,6 @@
 package logic;
 
+
 /**
  * 
  * Class that represents the dard element.
