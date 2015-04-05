@@ -1,5 +1,6 @@
 package cli;
 
+import gui.Gui;
 import gui.GameFrame;
 
 import java.io.FileInputStream;
@@ -19,7 +20,7 @@ public class Interface{
 	static int dif;
 	static String input;
 	static GameState game;
-	static GameFrame GUI;
+	static Gui gui;
 	static boolean state;
 
 	public static void main(String[] args) {
@@ -28,17 +29,6 @@ public class Interface{
 	
 	public static void init(){
 		game = new GameState();
-		/*
-		try {
-			readFile();
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		game.printGame();*/
 		chooseGameMode();
 		chooseGameDifficulty();
 		if(mode == 2){
@@ -52,14 +42,7 @@ public class Interface{
 		}
 		game.addElements();
 		printGame();
-		GUI = new GameFrame(game);
-		try {
-			writeToFile();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		gui = new Gui(game);
 		/* Main cycle */
 		chooseActionAndPlay();
 		System.out.println("game finished!");
@@ -101,20 +84,8 @@ public class Interface{
 			}while( !(input.equalsIgnoreCase("w") || input.equalsIgnoreCase("a") || input.equalsIgnoreCase("s") || input.equalsIgnoreCase("d") || input.equalsIgnoreCase("f")));
 			state = game.play(input);
 			printGame();
-			GUI.update();
+			gui.getGameFrame().update();
 		}while(state == true);
-	}
-
-	public static void writeToFile() throws FileNotFoundException, IOException{
-		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("save.bin"));
-		out.writeObject(game);
-		out.close();
-	}
-	
-	public static void readFile() throws FileNotFoundException, IOException, ClassNotFoundException{
-		ObjectInputStream in = new ObjectInputStream(new FileInputStream("save.bin"));
-		game = (GameState) in.readObject();
-		in.close();
 	}
 	
 	public static void printGame(){
@@ -124,5 +95,6 @@ public class Interface{
 			}
 			System.out.print('\n');
 		}
+		System.out.println("Choose a direction to go('w','a','s','d')");
 	}
 }

@@ -15,6 +15,7 @@ public class GameState implements Serializable{
 	private Maze labirinto;
 	private Hero hero;
 	private boolean preset;
+	private int numDragons = 2;
 	private int SIZE;
 	private Dragon dragon;
 	private Sword sword;
@@ -53,6 +54,11 @@ public class GameState implements Serializable{
 	public int getSIZE() {
 		return SIZE;
 	}
+	
+	public void setSIZE(int s){
+		SIZE = s;
+	}
+	
 	/**
 	 * Sets the hero for this gamestate.
 	 * @param h - hero
@@ -113,21 +119,20 @@ public class GameState implements Serializable{
 		Sword s = new Sword('E',true);
 		Dard dardo1 = new Dard('/');
 		Dard dardo2 = new Dard('/');
-		dardo1.generate(labirinto, labirinto.getSIZE());
-		dardo2.generate(labirinto, labirinto.getSIZE());
 		Shield escudo = new Shield('O');
-		escudo.generate(labirinto, labirinto.getSIZE());
-		elements.add(dardo1);
-		Dragon d = new Dragon('D',true,false);
-		Dragon d2 = new Dragon('D', true, false);
 		s.generate(labirinto, labirinto.getSIZE());
 		elements.add(s);
+		dardo1.generate(labirinto, labirinto.getSIZE());
+		elements.add(dardo1);
+		dardo2.generate(labirinto, labirinto.getSIZE());
+		escudo.generate(labirinto, labirinto.getSIZE());
 		h.generate(labirinto, labirinto.getSIZE());
 		elements.add(h); 
-		d.generate(labirinto, labirinto.getSIZE());
-		dragons.add(d);
-		d2.generate(labirinto, labirinto.getSIZE());
-		dragons.add(d2);
+		for(int i = 0; i < numDragons; i++){
+			Dragon d = new Dragon('D',true,false);
+			d.generate(labirinto, labirinto.getSIZE());
+			dragons.add(d);
+		}
 	}
 	/**
 	 * Initiates a play.<p>
