@@ -15,7 +15,7 @@ public class GameState implements Serializable{
 	private Maze labirinto;
 	private Hero hero;
 	private boolean preset;
-	private int numDragons = 2;
+	private int numDragons;
 	private int SIZE;
 	private Dragon dragon;
 	private Sword sword;
@@ -32,6 +32,7 @@ public class GameState implements Serializable{
 	 * Simple constructor.
 	 */
 	public GameState(){
+		numDragons = 2;
 	}
 	/**
 	 * Returns the hero object of this gamestate.
@@ -55,8 +56,24 @@ public class GameState implements Serializable{
 		return SIZE;
 	}
 	
+	public int getNumDragons(){
+		return numDragons;
+	}
+	
+	public void setNumOfDragons(int n){
+		numDragons = n;
+	}
+	
 	public void setSIZE(int s){
 		SIZE = s;
+	}
+	
+	public void setPreset(boolean pre){
+		preset = pre;
+	}
+	
+	public boolean getPreset(){
+		return preset;
 	}
 	
 	/**
@@ -84,6 +101,8 @@ public class GameState implements Serializable{
 		this.labirinto.getExitCoord();
 		this.state = true;
 		SIZE = 10;
+		elements.clear();
+		dragons.clear();
 		preset = true;
 	}
 	/**
@@ -94,8 +113,13 @@ public class GameState implements Serializable{
 		this.labirinto = new Maze(size);
 		this.labirinto.getExitCoord();
 		this.state = true;
+		elements.clear();
+		dragons.clear();
 		SIZE = size;
 		preset = false;
+	}
+	public int getDifficulty() {
+		return difficulty;
 	}
 	/**
 	 * Sets the difficulty of the game.
@@ -636,7 +660,6 @@ public class GameState implements Serializable{
 			initialize(SIZE);
 		}
 		addElements();
-		
 	}
 	
 	
@@ -697,5 +720,6 @@ public class GameState implements Serializable{
 		labirinto.setSymbol(pe, shield.getSymbol());
 		labirinto.setSymbol(pda, dard.getSymbol());
 	}
+
 
 }

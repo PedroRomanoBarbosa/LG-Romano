@@ -16,7 +16,7 @@ public class Element implements Serializable{
 	protected char symbol;
 	protected char symbolBelow;
 
-	
+
 	/**
 	 * Creates a new Element object.
 	 * @param symbol symbol of the element
@@ -94,9 +94,13 @@ public class Element implements Serializable{
 	 */
 	public void generate(Maze maze, int size){
 		Random rand = new Random();
-		int position = rand.nextInt(countBlankSpace(maze.getLab(),size)) + 1;
-		setCoord(position,maze.getLab(),size);
-		this.setSymbolBelow(symbolBelow);
+		int n_positions = countBlankSpace(maze.getLab(),size);
+		if(n_positions >0){
+			int position = rand.nextInt(n_positions) + 1;
+			setCoord(position,maze.getLab(),size);
+			this.setSymbolBelow(symbolBelow);
+		}
+		
 	}
 	/**
 	 * Counts the valid positions in a maze array.
