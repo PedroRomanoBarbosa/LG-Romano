@@ -3,6 +3,7 @@ package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,7 +40,7 @@ import logic.GameState;
 public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 
 	private GameState game;
-	private JFrame frame;
+	private JFrame frame, mainMenu;
 	private JPanel panel, generalPanel;
 	private JPanel settingsPanel;
 	private int nextSize, nextNumOfDragons;
@@ -48,29 +49,38 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 	private JPanel panel2;
 	private JLabel sizeLabel,numDragonsLabel;
 	private JButton exit, restart, saveGame, loadGame, backToMain, settings, acceptSettings, cancelSettings, upButton, downButton, leftButton, rightButton;
+	private JButton instructionsButton;
+	private JButton newGame, loadGameMain, exitGameMain, createLabirinth;
 	private GridLayout buttonLayout;
 	private GridLayout mazeLayout, frameLayout;
 	private JSlider sizeSlider, numDragonsSlider;
 	private JRadioButton one,two,three;
 	private ButtonGroup group;
 	private JPanel buttonPanel;
+	private int chooseKeyMode;
 
 
 
 	public GameFrame(GameState g){
 		game = g;
-		
 		nextSize = game.getSIZE();
 		nextNumOfDragons = game.getNumDragons();
 		up = 'w';
 		down = 's';
 		left = 'a';
 		right = 'd';
-		
+		chooseKeyMode = -1;
+		createMainMenu();
+		createGameFrame();
+		createSettingsFrame();
+		mainMenu.setVisible(true);
+	}
+
+	public void createGameFrame(){
 		generalPanel = new JPanel();
 		frame = new JFrame("D&D");
-		createSettingsFrame();
-		exit = new JButton("Exit Game");
+
+		exit = new JButton("Exit to MainMenu");
 		exit.setFocusable(false);
 		restart = new JButton("Restart Game");
 		restart.setFocusable(false);
@@ -82,13 +92,14 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		loadGame.setFocusable(false);
 		settings = new JButton("Settings");
 		settings.setFocusable(false);
-		
+		instructionsButton = new JButton("Instructions");
+		instructionsButton.setFocusable(false);
 
 		panel = new JPanel();
 		panel2 = new JPanel();
 		frame.addKeyListener(this);
 		frame.setResizable(false);
-		buttonLayout = new GridLayout(5,1);
+		buttonLayout = new GridLayout(6,1);
 		frameLayout = new GridLayout(1,2);
 		mazeLayout = new GridLayout(game.getSIZE(),game.getSIZE());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -113,18 +124,66 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		panel.add(loadGame);
 		panel.add(restart);
 		panel.add(settings);
+		panel.add(instructionsButton);
 		panel.add(exit);
 
 		generalPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
 		panel2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		
+
 		generalPanel.add(panel2);
 		generalPanel.add(panel);
 		frame.add(generalPanel);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
+	}
+
+	public void createMainMenu(){
+		mainMenu = new JFrame("D&D");
+		mainMenu.setResizable(false);
+		mainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel mainMenuPainel = new JPanel();
+		mainMenuPainel.setLayout(new BoxLayout(mainMenuPainel,BoxLayout.Y_AXIS));
+
+		JPanel titlePanel = new JPanel();
+		JLabel title = new JLabel("Dungeons & Dragons");
+		title.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		title.setFont(new Font("Impact",1,50));
+		titlePanel.add(title);
+
+
+		JPanel buttonMainMenuPanel = new JPanel();
+		buttonMainMenuPanel.setLayout(new BoxLayout(buttonMainMenuPanel,BoxLayout.Y_AXIS));
+
+		newGame = new JButton("New Game");
+		loadGameMain = new JButton("load Game");
+		exitGameMain = new JButton("Exit");
+		createLabirinth = new JButton("Create Labirinth");
+		newGame.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		loadGameMain.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		exitGameMain.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		createLabirinth.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		newGame.addActionListener(this);
+		loadGameMain.addActionListener(this);
+		exitGameMain.addActionListener(this);
+		createLabirinth.addActionListener(this);
+
+		newGame.setMinimumSize(createLabirinth.getPreferredSize());
+		loadGameMain.setMinimumSize(createLabirinth.getPreferredSize());
+		exitGameMain.setMinimumSize(createLabirinth.getPreferredSize());
+
+		buttonMainMenuPanel.add(newGame);
+		buttonMainMenuPanel.add(loadGameMain);
+		buttonMainMenuPanel.add(createLabirinth);
+		buttonMainMenuPanel.add(exitGameMain);
+
+		mainMenuPainel.add(titlePanel);
+		mainMenuPainel.add(Box.createRigidArea(new Dimension(1,50)));
+		mainMenuPainel.add(buttonMainMenuPanel);
+		mainMenuPainel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		mainMenu.add(mainMenuPainel);
+		mainMenu.pack();
+		mainMenu.setLocationRelativeTo(null);
 	}
 
 	public void createSettingsFrame(){
@@ -132,6 +191,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		JSeparator separator = new JSeparator();
 		settingsPanel.setLayout(new BoxLayout(settingsPanel,BoxLayout.Y_AXIS));
 		settingsFrame = new JDialog(frame,"Settings");
+		settingsFrame.addKeyListener(this);
 		settingsFrame.setModal(true);
 		settingsFrame.setResizable(false);
 
@@ -148,6 +208,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		settingsPanel.add(sizePanel);
 
 		sizeSlider = new JSlider(SwingConstants.HORIZONTAL,5,49,nextSize);
+		sizeSlider.setFocusable(false);
 		sizeSlider.setPaintTicks(true);
 		sizeSlider.setPaintLabels(true);
 		sizeSlider.setMajorTickSpacing(6);
@@ -156,7 +217,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		settingsPanel.add(sizeSlider);
 
 		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
-		
+
 		JPanel numDragonsPanel = new JPanel();
 		numDragonsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		numDragonsLabel = new JLabel("Next number of dragons: " + nextNumOfDragons);
@@ -164,21 +225,25 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		settingsPanel.add(numDragonsPanel);
 
 		numDragonsSlider = new JSlider(SwingConstants.HORIZONTAL,0,29,nextNumOfDragons);
+		numDragonsSlider.setFocusable(false);
 		numDragonsSlider.setPaintTicks(true);
 		numDragonsSlider.setPaintLabels(true);
 		numDragonsSlider.setMajorTickSpacing(6);
 		numDragonsSlider.setMinorTickSpacing(2);
 		numDragonsSlider.addChangeListener(this);
 		settingsPanel.add(numDragonsSlider);
-		
+
 		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
 		separator = new JSeparator();
 		settingsPanel.add(separator);
 		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
-		
+
 		one = new JRadioButton("Immobile dragons");
+		one.setFocusable(false);
 		two = new JRadioButton("Roamming dragons");
+		two.setFocusable(false);
 		three = new JRadioButton("Roamming dragons + asleep");
+		three.setFocusable(false);
 		group = new ButtonGroup();
 		switch(game.getDifficulty()){
 		case 1:
@@ -200,22 +265,30 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		buttonPanel.add(two);
 		buttonPanel.add(three);
 		settingsPanel.add(buttonPanel);
-		
+
 		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
 		separator = new JSeparator();
 		settingsPanel.add(separator);
 		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
-		
+
 		JPanel keyPanel = new JPanel();
 		keyPanel.setLayout(new GridLayout(3,3));
-		
+
 		JPanel keyPanelHolder = new JPanel();
 		keyPanelHolder.setLayout(new GridLayout(1,3));
-		
+
 		upButton = new JButton("UP - '" + up + "'");
 		downButton = new JButton("DOWN - '" + down + "'");
 		leftButton = new JButton("LEFT - '" + left + "'");
 		rightButton = new JButton("RIGHT - '" + right + "'");
+		upButton.addActionListener(this);
+		downButton.addActionListener(this);
+		leftButton.addActionListener(this);
+		rightButton.addActionListener(this);
+		upButton.setFocusable(false);
+		downButton.setFocusable(false);
+		leftButton.setFocusable(false);
+		rightButton.setFocusable(false);
 		JPanel empty = new JPanel();
 		keyPanel.add(empty);
 		keyPanel.add(upButton);
@@ -235,23 +308,28 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		keyPanel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
 		keyPanelHolder.add(keyPanel);
 
-		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
-		
 		label = new JLabel("Change key commands:");
 		label.setAlignmentX(JPanel.CENTER_ALIGNMENT);
 		settingsPanel.add(label);
-		
+
 		settingsPanel.add(Box.createRigidArea(new Dimension(1,10)));
-		
 		settingsPanel.add(keyPanelHolder);
-		
-		settingsPanel.add(Box.createRigidArea(new Dimension(1,50)));
-		
+
+		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
+		separator = new JSeparator();
+		settingsPanel.add(separator);
+		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
+
 		JPanel controlPanel = new JPanel();
+		cancelSettings = new JButton("Cancel");
+		cancelSettings.setFocusable(false);
 		acceptSettings = new JButton("Accept");
-		acceptSettings.setAlignmentX(JPanel.CENTER_ALIGNMENT);
-		settingsPanel.add(acceptSettings);
-		
+		acceptSettings.setFocusable(false);
+		controlPanel.add(acceptSettings);
+		controlPanel.add(cancelSettings);
+		settingsPanel.add(controlPanel);
+
+
 		settingsFrame.add(settingsPanel);
 		settingsPanel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 		settingsFrame.pack();
@@ -285,11 +363,13 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		}
 		frame.pack();
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == exit){
-			System.exit(0);
+			frame.setVisible(false);
+			mainMenu.setLocationRelativeTo(null);
+			mainMenu.setVisible(true);
 		}
 		else if(e.getSource() == restart){
 			int option = JOptionPane.showConfirmDialog(null,"Do you really want to restart the game?","Warning",JOptionPane.WARNING_MESSAGE);
@@ -339,26 +419,89 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		}
 		else if(e.getSource() == settings){
 			settingsFrame.setVisible(true);
+			chooseKeyMode = 0;
+		}
+		else if(e.getSource() == exitGameMain){
+			System.exit(0);
+		}
+		else if(e.getSource() == newGame){
+			game.restartGame();
+			updateNewMaze();
+			mainMenu.setVisible(false);
+			frame.setVisible(true);
+		}
+		else if(e.getSource() == loadGameMain){
+			try {
+				readFile();
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			updateNewMaze();
+			mainMenu.setVisible(false);
+			frame.setVisible(true);
+		}
+		else if(e.getSource() == createLabirinth){
+			System.exit(0);
+		}
+		else if(e.getSource() == upButton){
+			chooseKeyMode = 1;
+		}
+		else if(e.getSource() == downButton){
+			chooseKeyMode = 2;
+		}
+		else if(e.getSource() == leftButton){
+			chooseKeyMode = 3;
+		}
+		else if(e.getSource() == rightButton){
+			chooseKeyMode = 4;
 		}
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		int c = e.getKeyChar();
-		if(c == 'w'){
-			game.play("w");
+		if(chooseKeyMode == -1){
+			char c = e.getKeyChar();
+			if(c == 'w'){
+				game.play("w");
+			}
+			else if(c == 's'){
+				game.play("s");
+			}
+			else if(c == 'd'){
+				game.play("d");
+			}
+			else if(c == 'a'){
+				game.play("a");
+			}
+			else if(c == 'f'){
+				game.play("f");
+			}
+			Interface.printGame();
+			this.play();
 		}
-		else if(c == 's'){
-			game.play("s");
+		else{
+			char c = e.getKeyChar();
+			switch(chooseKeyMode){
+				case 1:
+					up = c;
+					upButton.setText("UP - '" + c + "'");
+					chooseKeyMode = 0;
+					break;
+				case 2:
+					down = c;
+					downButton.setText("DOWN - '" + c + "'");
+					chooseKeyMode = 0;
+					break;
+				case 3:
+					break;
+				case 4:
+					break;
+			}
 		}
-		else if(c == 'd'){
-			game.play("d");
-		}
-		else if(c == 'a'){
-			game.play("a");
-		}
-		Interface.printGame();
-		this.play();
 
 	}
 
@@ -381,7 +524,6 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		game = (GameState) in.readObject();
 		in.close();
 	}
-
 
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
