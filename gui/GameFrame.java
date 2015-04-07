@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +15,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -21,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -34,16 +40,16 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 
 	private GameState game;
 	private JFrame frame;
-	private JPanel panel;
+	private JPanel panel, generalPanel;
+	private JPanel settingsPanel;
 	private int nextSize, nextNumOfDragons;
-	private int up, down, left, right;
+	private char up, down, left, right;
 	private JDialog settingsFrame;
 	private JPanel panel2;
 	private JLabel sizeLabel,numDragonsLabel;
-	private JButton exit, restart, saveGame, loadGame, backToMain, settings;
+	private JButton exit, restart, saveGame, loadGame, backToMain, settings, acceptSettings, cancelSettings, upButton, downButton, leftButton, rightButton;
 	private GridLayout buttonLayout;
-	private GridLayout mazeLayout, frameLayout, settingsLayout;
-	private JTextField textSettings;
+	private GridLayout mazeLayout, frameLayout;
 	private JSlider sizeSlider, numDragonsSlider;
 	private JRadioButton one,two,three;
 	private ButtonGroup group;
@@ -56,7 +62,12 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		
 		nextSize = game.getSIZE();
 		nextNumOfDragons = game.getNumDragons();
+		up = 'w';
+		down = 's';
+		left = 'a';
+		right = 'd';
 		
+		generalPanel = new JPanel();
 		frame = new JFrame("D&D");
 		createSettingsFrame();
 		exit = new JButton("Exit Game");
@@ -81,7 +92,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		frameLayout = new GridLayout(1,2);
 		mazeLayout = new GridLayout(game.getSIZE(),game.getSIZE());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLayout(frameLayout);
+		generalPanel.setLayout(frameLayout);
 
 		panel.setLayout(buttonLayout);
 		panel2.setLayout(mazeLayout);
@@ -104,25 +115,37 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		panel.add(settings);
 		panel.add(exit);
 
-		frame.add(panel2);
-		frame.add(panel);
+		generalPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+
+		panel2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
+		generalPanel.add(panel2);
+		generalPanel.add(panel);
+		frame.add(generalPanel);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 
 	public void createSettingsFrame(){
-		settingsLayout = new GridLayout(6,1);
+		settingsPanel = new JPanel();
+		JSeparator separator = new JSeparator();
+		settingsPanel.setLayout(new BoxLayout(settingsPanel,BoxLayout.Y_AXIS));
 		settingsFrame = new JDialog(frame,"Settings");
 		settingsFrame.setModal(true);
 		settingsFrame.setResizable(false);
-		settingsFrame.setLayout(settingsLayout);
 
 		JLabel label = new JLabel("<html>Only the keys are going to be changed instantly.<br>Restart the game to apply the other changes.");
-		settingsFrame.add(label);
+		label.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		settingsPanel.add(label);
 
-		sizeLabel = new JLabel("Size of the new maze:" + nextSize);
-		settingsFrame.add(sizeLabel);
+		settingsPanel.add(Box.createRigidArea(new Dimension(1,20)));
+		settingsPanel.add(separator);
+		JPanel sizePanel = new JPanel();
+		sizePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		sizeLabel = new JLabel("Size of the new maze: " + nextSize);
+		sizePanel.add(sizeLabel);
+		settingsPanel.add(sizePanel);
 
 		sizeSlider = new JSlider(SwingConstants.HORIZONTAL,5,49,nextSize);
 		sizeSlider.setPaintTicks(true);
@@ -130,10 +153,15 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		sizeSlider.setMajorTickSpacing(6);
 		sizeSlider.setMinorTickSpacing(2);
 		sizeSlider.addChangeListener(this);
-		settingsFrame.add(sizeSlider);
+		settingsPanel.add(sizeSlider);
 
-		numDragonsLabel = new JLabel("Next number of dragons:" + nextNumOfDragons);
-		settingsFrame.add(numDragonsLabel);
+		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
+		
+		JPanel numDragonsPanel = new JPanel();
+		numDragonsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		numDragonsLabel = new JLabel("Next number of dragons: " + nextNumOfDragons);
+		numDragonsPanel.add(numDragonsLabel);
+		settingsPanel.add(numDragonsPanel);
 
 		numDragonsSlider = new JSlider(SwingConstants.HORIZONTAL,0,29,nextNumOfDragons);
 		numDragonsSlider.setPaintTicks(true);
@@ -141,7 +169,12 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		numDragonsSlider.setMajorTickSpacing(6);
 		numDragonsSlider.setMinorTickSpacing(2);
 		numDragonsSlider.addChangeListener(this);
-		settingsFrame.add(numDragonsSlider);
+		settingsPanel.add(numDragonsSlider);
+		
+		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
+		separator = new JSeparator();
+		settingsPanel.add(separator);
+		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
 		
 		one = new JRadioButton("Immobile dragons");
 		two = new JRadioButton("Roamming dragons");
@@ -166,20 +199,73 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		buttonPanel.add(one);
 		buttonPanel.add(two);
 		buttonPanel.add(three);
-		settingsFrame.add(buttonPanel);
+		settingsPanel.add(buttonPanel);
 		
+		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
+		separator = new JSeparator();
+		settingsPanel.add(separator);
+		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
+		
+		JPanel keyPanel = new JPanel();
+		keyPanel.setLayout(new GridLayout(3,3));
+		
+		JPanel keyPanelHolder = new JPanel();
+		keyPanelHolder.setLayout(new GridLayout(1,3));
+		
+		upButton = new JButton("UP - '" + up + "'");
+		downButton = new JButton("DOWN - '" + down + "'");
+		leftButton = new JButton("LEFT - '" + left + "'");
+		rightButton = new JButton("RIGHT - '" + right + "'");
+		JPanel empty = new JPanel();
+		keyPanel.add(empty);
+		keyPanel.add(upButton);
+		empty = new JPanel();
+		keyPanel.add(empty);
+		keyPanel.add(leftButton);
+		empty = new JPanel();
+		keyPanel.add(empty);
+		keyPanel.add(rightButton);
+		empty = new JPanel();
+		keyPanel.add(empty);
+		keyPanel.add(downButton);
+		empty = new JPanel();
+		keyPanel.add(empty);
+
+		keyPanel.setPreferredSize(new Dimension(60,60));
+		keyPanel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		keyPanelHolder.add(keyPanel);
+
+		settingsPanel.add(Box.createRigidArea(new Dimension(1,5)));
+		
+		label = new JLabel("Change key commands:");
+		label.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		settingsPanel.add(label);
+		
+		settingsPanel.add(Box.createRigidArea(new Dimension(1,10)));
+		
+		settingsPanel.add(keyPanelHolder);
+		
+		settingsPanel.add(Box.createRigidArea(new Dimension(1,50)));
+		
+		JPanel controlPanel = new JPanel();
+		acceptSettings = new JButton("Accept");
+		acceptSettings.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		settingsPanel.add(acceptSettings);
+		
+		settingsFrame.add(settingsPanel);
+		settingsPanel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 		settingsFrame.pack();
 		settingsFrame.setLocationRelativeTo(null);
 	}
 
-	public void update(){
+	public void updateNewMaze(){
 		panel2.removeAll();
 		mazeLayout = new GridLayout(game.getSIZE(),game.getSIZE());
 		panel2.setLayout(mazeLayout);
+		char[][] c = game.getMaze().getLab();
 		for(int y = 0; y < game.getSIZE(); y++){
 			for(int x = 0; x < game.getSIZE(); x++){
-				JLabel l = new JLabel(game.getMaze().getLab()[y][x] + "");
-				panel2.add(l);
+				panel2.add( new JLabel("" + c[y][x]));
 			}
 		}
 		nextSize = game.getSIZE();
@@ -189,6 +275,17 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		frame.setLocationRelativeTo(null);
 	}
 
+	public void play(){
+		panel2.removeAll();
+		char[][] c = game.getMaze().getLab();
+		for(int y = 0; y < game.getSIZE(); y++){
+			for(int x = 0; x < game.getSIZE(); x++){
+				panel2.add( new JLabel("" + c[y][x]));
+			}
+		}
+		frame.pack();
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == exit){
@@ -213,7 +310,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 					game.setPreset(false);
 				}
 				game.restartGame();
-				update();
+				updateNewMaze();
 				Interface.printGame();
 			}
 		}
@@ -237,7 +334,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 			} catch (ClassNotFoundException e1) {
 				e1.printStackTrace();
 			}
-			update();
+			updateNewMaze();
 			JOptionPane.showMessageDialog(null,"Your game was loaded!",  "Load game", JOptionPane.INFORMATION_MESSAGE);
 		}
 		else if(e.getSource() == settings){
@@ -247,21 +344,21 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		int c = e.getKeyCode();
-		if(c == 87){
+		int c = e.getKeyChar();
+		if(c == 'w'){
 			game.play("w");
 		}
-		else if(c == 83){
+		else if(c == 's'){
 			game.play("s");
 		}
-		else if(c == 68){
+		else if(c == 'd'){
 			game.play("d");
 		}
-		else if(c == 65){
+		else if(c == 'a'){
 			game.play("a");
 		}
 		Interface.printGame();
-		this.update();
+		this.play();
 
 	}
 
@@ -290,16 +387,16 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 	public void stateChanged(ChangeEvent arg0) {
 		if(arg0.getSource() == sizeSlider){
 			if(sizeSlider.getValue() % 2 == 0){
-				sizeLabel.setText("Size of the new maze:" + (sizeSlider.getValue() - 1));
+				sizeLabel.setText("Size of the new maze: " + (sizeSlider.getValue() - 1));
 				nextSize = (sizeSlider.getValue() - 1);
 			}
 			else{
-				sizeLabel.setText("Size of the new maze:" + sizeSlider.getValue());
+				sizeLabel.setText("Size of the new maze: " + sizeSlider.getValue());
 				nextSize = sizeSlider.getValue();
 			}
 		}
 		else if(arg0.getSource() == numDragonsSlider){
-			numDragonsLabel.setText("Next number of dragons:" + numDragonsSlider.getValue());
+			numDragonsLabel.setText("Next number of dragons: " + numDragonsSlider.getValue());
 			nextNumOfDragons = numDragonsSlider.getValue();
 		}
 

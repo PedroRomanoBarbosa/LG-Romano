@@ -214,7 +214,15 @@ public class TestLabirinto {
 	@Test 
 	public void testCuspirFogo()
 	{
-		
+		GameState j1=new GameState();
+		j1.iniciar();
+		assertEquals(true,j1.checkDragonRange());
+		Hero h=j1.getHero();
+		h.setPosition(1, 5);
+		assertEquals(true,j1.checkDragonRange());
+		Dragon d=j1.getDragao();
+		h.setPosition(2, 1);
+		assertEquals(false,j1.checkDragonRange());
 	}
 	@Test 
 	public void testApanhaEscudo()
@@ -330,5 +338,40 @@ public class TestLabirinto {
 		assertEquals(true,test);
 		
 	}
-
+	@Test
+	public void testValidDragonMovement()
+	{
+		GameState j1=new GameState();
+		j1.iniciar();
+		Dragon d=j1.getDragao();
+		j1.validMovementDragon(1, d);
+		assertEquals(0,j1.validMovementDragon(1, d));
+		assertEquals(1,j1.validMovementDragon(3, d));
+	}
+	@Test 
+	public void testDragonMoveRandom()
+	{
+		GameState j1=new GameState();
+		j1.iniciar();
+		Dragon d=j1.getDragao();
+		Dragon d1=j1.getDragao();
+		d1.setPosition(2, 5);
+		j1.moveDragao(d);
+		j1.moveDragao(d1);
+		assertNotEquals(1, d.getPonto().getYpos());
+		assertNotEquals(2, d.getPonto().getXpos());
+	}
+	@Test
+	public void testPlay()
+	{
+		GameState j1=new GameState();
+		j1.iniciar();
+		Hero h=j1.getHero();
+		j1.play("d");
+		assertEquals(true,h.getState());
+		h.incDards();
+		assertEquals(1,h.getDardNumber());
+		j1.play("f");
+		assertEquals(0,h.getDardNumber());
+	}
 }

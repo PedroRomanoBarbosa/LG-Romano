@@ -84,7 +84,7 @@ public class Interface{
 			}while( !(input.equalsIgnoreCase("w") || input.equalsIgnoreCase("a") || input.equalsIgnoreCase("s") || input.equalsIgnoreCase("d") || input.equalsIgnoreCase("f")));
 			state = game.play(input);
 			printGame();
-			gui.getGameFrame().update();
+			gui.getGameFrame().play();
 		}while(state == true);
 	}
 	
