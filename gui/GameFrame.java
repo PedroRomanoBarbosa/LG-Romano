@@ -432,7 +432,6 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 			mainMenu.setVisible(true);
 		}
 		else if(e.getSource() == restart){
-			System.out.println(nextSize2 + " " + nextNumOfDragons2 + " " + nextMode + "\n");
 			int option = JOptionPane.showConfirmDialog(null,"Do you really want to restart the game?","Warning",JOptionPane.WARNING_MESSAGE);
 			if(option == JOptionPane.YES_OPTION){
 				game.setDifficulty(nextMode);
@@ -596,7 +595,6 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 			settingsFrame.setVisible(false);
 		}
 		else if(e.getSource() == acceptSettings){
-			System.out.println(nextSize2 + " " + nextNumOfDragons2 + " " + nextMode + "\n");
 			settingsFrame.setVisible(false);
 			up = nextUp;
 			down = nextDown;
@@ -619,10 +617,8 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 				nextSize2 = sizeSlider.getValue();
 			}
 			nextNumOfDragons2 = numDragonsSlider.getValue();
-			System.out.println(nextSize2 + " " + nextNumOfDragons2 + " " + nextMode + "\n");
 		}
 		else if(e.getSource() == instructionsButton){
-			System.out.println(nextSize2 + " " + nextNumOfDragons2 + " " + nextMode + "\n");
 		}
 	}
 
@@ -681,8 +677,6 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		else if(arg0.getSource() == numDragonsSlider){
 			numDragonsLabel.setText("Next number of dragons: " + numDragonsSlider.getValue());
 		}
-		System.out.println(nextSize2 + " " + nextNumOfDragons2 + " " + nextMode + "\n");
-
 	}
 
 }
