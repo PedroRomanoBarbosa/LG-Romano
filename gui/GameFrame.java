@@ -32,6 +32,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -67,9 +68,19 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 	private JSlider sizeSlider, numDragonsSlider;
 	private JRadioButton one,two,three;
 	private ButtonGroup group;
-	private JPanel buttonPanel;
+	private JPanel buttonPanel, layer1, layer2;
 	private int chooseKeyMode;
-	private ImageIcon wallImage, heroImage, grass1Image, dragonImage;
+	private ImageIcon wallImage, heroImage, grass1Image, dragonImage, transparentImage;
+	private ImageIcon wall, hero, grass1, dragon, transparent;
+	private JLayeredPane layer;
+	
+	private JDialog chooseSize;
+	private JFrame createMaze;
+	private JPanel tablePanel,optionsPanel;
+	private JButton chooseHero, chooseSword, chooseShield, chooseDragons, chooseDards,chooseWalls, chooseBlank, backButton;
+	private JLabel numDragons, numDards, info;
+	private JSlider sizeSliderNew;
+	private int sizeOfNew;
 
 
 
@@ -86,18 +97,83 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		createMainMenu();
 		createGameFrame();
 		createSettingsFrame();
+		createMazeTable();
 		mainMenu.setVisible(true);
-		
-		wallImage = new ImageIcon("resources/wall.png");
-		grass1Image = new ImageIcon("resources/grass1.png");
-		heroImage = new ImageIcon("resources/sanic.png");
-		dragonImage = new ImageIcon("resources/illuminati.png");
-		
+
+		wall = new ImageIcon("resources/wall.png");
+		grass1 = new ImageIcon("resources/grass1.png");
+		hero = new ImageIcon("resources/sanic.png");
+		dragon = new ImageIcon("resources/illuminati.png");
+		transparent = new ImageIcon("resources/transparent.png");
+
+		wallImage = new ImageIcon();
+		grass1Image = new ImageIcon();
+		heroImage = new ImageIcon();
+		dragonImage = new ImageIcon();
+		transparentImage = new ImageIcon();
 		updateImagesSize();
 	}
 
+	public void createMazeTable(){
+		sizeOfNew = 15;
+		JPanel general = new JPanel();
+		chooseSize = new JDialog();
+		createMaze = new JFrame();
+		tablePanel = new JPanel();
+		optionsPanel = new JPanel();
+		chooseHero = new JButton("Hero");
+		chooseSword = new JButton("Sword");
+		chooseShield = new JButton("Shield");
+		chooseDragons = new JButton("Dragons");
+		chooseDards = new JButton("Dards");
+		chooseWalls = new JButton("Walls");
+		chooseBlank = new JButton("Blanks");
+		backButton = new JButton("Back to main menu");
+		info = new JLabel("INFO");
+		sizeSliderNew = new JSlider();
+		
+		general.setLayout(new BoxLayout(general,BoxLayout.X_AXIS));
+		tablePanel.setLayout(new GridLayout(sizeOfNew,sizeOfNew));
+		optionsPanel.setLayout(new BoxLayout(optionsPanel,BoxLayout.Y_AXIS));
+		chooseSize.setLayout(new BoxLayout(chooseSize,BoxLayout.Y_AXIS));
+		
+		chooseSize.setModalityType(ModalityType.APPLICATION_MODAL);
+		chooseSize.setResizable(false);
+		createMaze.setResizable(true);
+		
+		optionsPanel.add(info);
+		optionsPanel.add(chooseHero);
+		optionsPanel.add(chooseSword);
+		optionsPanel.add(chooseShield);
+		optionsPanel.add(chooseDragons);
+		optionsPanel.add(chooseDards);
+		optionsPanel.add(chooseWalls);
+		optionsPanel.add(chooseBlank);
+		optionsPanel.add(backButton);
+		
+		int newSize = (sizeOfNew/game.getSIZE()) * game.getSIZE();
+		panel2.removeAll();
+		panel2.setLayout(new GridLayout(game.getSIZE(),game.getSIZE()));
+		for(int y = 0; y < sizeOfNew; y++){
+			for(int x = 0; x < sizeOfNew; x++){
+				JLabel l = new JLabel("X");
+				tablePanel.add(l);
+			}
+		}
+		tablePanel.setPreferredSize(new Dimension(600, 600));
+		tablePanel.repaint();
+		
+		general.add(tablePanel);
+		general.add(optionsPanel);
+		createMaze.add(general);
+		createMaze.pack();
+		createMaze.setLocationRelativeTo(null);
+		createMaze.setVisible(false);
+	}
+	
 	public void createGameFrame(){
 		generalPanel = new JPanel();
+		layer = new JLayeredPane();
 		frame = new JFrame("D&D");
 		exit = new JButton("Exit to MainMenu");
 		exit.setFocusable(false);
@@ -123,33 +199,19 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		mazeLayout = new GridLayout(game.getSIZE(),game.getSIZE());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		generalPanel.setLayout(frameLayout);
-		
+
+		layer1 = new JPanel();
+		layer2 = new JPanel();
+
 		panel.setLayout(buttonLayout);
+
+
+		layer1.setLayout(mazeLayout);
+		layer2.setLayout(mazeLayout);
 		panel2.setLayout(mazeLayout);
-		char[][] c = game.getMaze().getLab();
-		for(int y = 0; y < game.getSIZE(); y++){
-			for(int x = 0; x < game.getSIZE(); x++){
-				JLabel l = new JLabel();
-				if(c[y][x] == 'X')
-					l.setIcon(wallImage);
-				else if(c[y][x] == 'H')
-					l.setIcon(heroImage);
-				else if(c[y][x] == '/')
-					l.setIcon(wallImage);
-				else if(c[y][x] == '/')
-					l.setIcon(wallImage);
-				else if(c[y][x] == 'O')
-					l.setIcon(wallImage);
-				else if(c[y][x] == 'E')
-					l.setIcon(wallImage);
-				else if(c[y][x] == 'D')
-					l.setIcon(dragonImage);
-				else if(c[y][x] == ' ')
-					l.setIcon(grass1Image);
-				panel2.add(l);
-			}
-		}
-		panel2.repaint();
+
+		updateLayer();
+
 
 		exit.addActionListener(this);
 		restart.addActionListener(this);
@@ -164,15 +226,11 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		panel.add(instructionsButton);
 		panel.add(exit);
 
-		generalPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-
 		panel2.setBackground(Color.CYAN);
 		panel2.setPreferredSize(new Dimension(panelSize,panelSize));
-		
+		panel.setBackground(Color.CYAN);
 		generalPanel.add(panel2);
 		generalPanel.add(panel);
-		//panel.setBackground(Color.GREEN);
-		//generalPanel.setBackground(Color.GREEN);
 		frame.add(generalPanel);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
@@ -250,6 +308,8 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 					char c = arg0.getKeyChar();
 					if(c == nextUp || c == nextDown || c == nextLeft || c == nextRight ){
 						errorLabel.setText("That key is already selected!");
+					}else if(c == 'f'){
+						errorLabel.setText("That key is reserved!");
 					}else if(Character.isDefined(c)){
 						switch(chooseKeyMode){
 						case 1:
@@ -438,75 +498,48 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 	}
 
 	public void updateNewMaze(){
-		panel2.removeAll();
-		mazeLayout = new GridLayout(game.getSIZE(),game.getSIZE());
-		panel2.setLayout(mazeLayout);
-		char[][] c = game.getMaze().getLab();
-		for(int y = 0; y < game.getSIZE(); y++){
-			for(int x = 0; x < game.getSIZE(); x++){
-				JLabel l = new JLabel();
-				if(c[y][x] == 'X')
-					l.setIcon(wallImage);
-				else if(c[y][x] == 'H')
-					l.setIcon(heroImage);
-				else if(c[y][x] == '/')
-					l.setIcon(wallImage);
-				else if(c[y][x] == '/')
-					l.setIcon(wallImage);
-				else if(c[y][x] == 'O')
-					l.setIcon(wallImage);
-				else if(c[y][x] == 'E')
-					l.setIcon(wallImage);
-				else if(c[y][x] == 'D')
-					l.setIcon(dragonImage);
-				else if(c[y][x] == ' ')
-					l.setIcon(grass1Image);
-				panel2.add(l);
-			}
-		}
+		updateLayer();
 		nextSize = game.getSIZE();
 		nextNumOfDragons = game.getNumDragons();
-		panel2.repaint();
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 	}
 
 	public void play(){
+		updateLayer();
+		frame.pack();
+	}
+
+	public void updateLayer(){
+		int newSize = (panelSize/game.getSIZE()) * game.getSIZE();
 		panel2.removeAll();
 		char[][] c = game.getMaze().getLab();
+		panel2.setLayout(new GridLayout(game.getSIZE(),game.getSIZE()));
 		for(int y = 0; y < game.getSIZE(); y++){
 			for(int x = 0; x < game.getSIZE(); x++){
 				JLabel l = new JLabel();
 				if(c[y][x] == 'X')
 					l.setIcon(wallImage);
-				else if(c[y][x] == 'H')
-					l.setIcon(heroImage);
-				else if(c[y][x] == '/')
-					l.setIcon(wallImage);
-				else if(c[y][x] == '/')
-					l.setIcon(wallImage);
-				else if(c[y][x] == 'O')
-					l.setIcon(wallImage);
-				else if(c[y][x] == 'E')
-					l.setIcon(wallImage);
-				else if(c[y][x] == 'D')
-					l.setIcon(dragonImage);
 				else if(c[y][x] == ' ')
 					l.setIcon(grass1Image);
+				else if(c[y][x] == 'H')
+					l.setIcon(heroImage);
+				else if(c[y][x] == 'D')
+					l.setIcon(dragonImage);
 				panel2.add(l);
 			}
 		}
+		panel2.setPreferredSize(new Dimension(newSize, newSize));
 		panel2.repaint();
-		frame.pack();
 	}
 
 	public void updateImagesSize(){
-		wallImage.setImage(wallImage.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
-		heroImage.setImage(heroImage.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
-		grass1Image.setImage(grass1Image.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
-		dragonImage.setImage(dragonImage.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		wallImage.setImage(wall.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroImage.setImage(hero.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		grass1Image.setImage(grass1.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		dragonImage.setImage(dragon.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == exit){
@@ -520,7 +553,6 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 				game.setDifficulty(nextMode);
 				game.setNumOfDragons(nextNumOfDragons2);
 				game.setSIZE(nextSize2);
-				updateImagesSize();
 				if(game.getSIZE() == 10){
 					game.setPreset(true);
 				}
@@ -528,6 +560,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 					game.setPreset(false);
 				}
 				game.restartGame();
+				updateImagesSize();
 				updateNewMaze();
 				Interface.printGame();
 				nextUp = up;
@@ -559,6 +592,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 			} catch (ClassNotFoundException e1) {
 				e1.printStackTrace();
 			}
+			updateImagesSize();
 			updateNewMaze();
 			nextSize2 = game.getSIZE();
 			nextNumOfDragons2 = game.getNumDragons();
@@ -595,11 +629,11 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 			downButton.setText("DOWN - '" + down + "'");
 			leftButton.setText("LEFT - '" + left + "'");
 			rightButton.setText("RIGHT - '" + right + "'");
-			sizeSlider.setValue(nextSize2);
+			sizeSlider.setValue(nextSize);
 			sizeLabel.setText("Size of the new maze: " + sizeSlider.getValue());
-			numDragonsSlider.setValue(nextNumOfDragons2);
+			numDragonsSlider.setValue(nextNumOfDragons);
 			numDragonsLabel.setText("Next number of dragons: " + numDragonsSlider.getValue());
-			switch(nextMode){
+			switch(game.getDifficulty()){
 			case 1:
 				one.setSelected(true);
 				break;
@@ -657,7 +691,8 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 
 		}
 		else if(e.getSource() == createLabirinth){
-			System.exit(0);
+			mainMenu.setVisible(false);
+			createMaze.setVisible(true);
 		}
 		else if(e.getSource() == upButton){
 			errorLabel.setText("     ");
@@ -731,7 +766,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 	}
-	
+
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 	}
