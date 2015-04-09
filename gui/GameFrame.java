@@ -47,6 +47,7 @@ import logic.GameState;
 
 public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 
+	private int panelSize;
 	private GameState game;
 	private JFrame frame, mainMenu;
 	private JPanel panel, generalPanel;
@@ -68,7 +69,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 	private ButtonGroup group;
 	private JPanel buttonPanel;
 	private int chooseKeyMode;
-	private ImageIcon wallImage, transparentImage, heroImage;
+	private ImageIcon wallImage, heroImage, grass1Image, dragonImage;
 
 
 
@@ -81,34 +82,18 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		left = 'a';
 		right = 'd';
 		chooseKeyMode = -1;
+		panelSize = 600;
 		createMainMenu();
 		createGameFrame();
 		createSettingsFrame();
 		mainMenu.setVisible(true);
-		BufferedImage img = null;
-		try {
-			img = ImageIO.read(new File("resources/black.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Image img2 = img.getScaledInstance(10, 10, Image.SCALE_FAST);
-		wallImage = new ImageIcon("resources/black.jpg");
 		
-		try {
-			img = ImageIO.read(new File("resources/transparent.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		img2 = img.getScaledInstance(10, 10, Image.SCALE_FAST);
-		transparentImage = new ImageIcon("resources/transparent.png");
+		wallImage = new ImageIcon("resources/wall.png");
+		grass1Image = new ImageIcon("resources/grass1.png");
+		heroImage = new ImageIcon("resources/sanic.png");
+		dragonImage = new ImageIcon("resources/illuminati.png");
 		
-		try {
-			img = ImageIO.read(new File("resources/hero.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		img2 = img.getScaledInstance(10, 10, Image.SCALE_FAST);
-		heroImage = new ImageIcon("resources/hero.png");
+		updateImagesSize();
 	}
 
 	public void createGameFrame(){
@@ -158,12 +143,13 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 				else if(c[y][x] == 'E')
 					l.setIcon(wallImage);
 				else if(c[y][x] == 'D')
-					l.setIcon(wallImage);
+					l.setIcon(dragonImage);
 				else if(c[y][x] == ' ')
-					l.setIcon(transparentImage);
+					l.setIcon(grass1Image);
 				panel2.add(l);
 			}
 		}
+		panel2.repaint();
 
 		exit.addActionListener(this);
 		restart.addActionListener(this);
@@ -181,12 +167,12 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		generalPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
 		panel2.setBackground(Color.CYAN);
-		panel2.setPreferredSize(new Dimension(500,500));
+		panel2.setPreferredSize(new Dimension(panelSize,panelSize));
 		
 		generalPanel.add(panel2);
 		generalPanel.add(panel);
-		panel.setBackground(Color.CYAN);
-		generalPanel.setBackground(Color.CYAN);
+		//panel.setBackground(Color.GREEN);
+		//generalPanel.setBackground(Color.GREEN);
 		frame.add(generalPanel);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
@@ -472,14 +458,15 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 				else if(c[y][x] == 'E')
 					l.setIcon(wallImage);
 				else if(c[y][x] == 'D')
-					l.setIcon(wallImage);
+					l.setIcon(dragonImage);
 				else if(c[y][x] == ' ')
-					l.setIcon(transparentImage);
+					l.setIcon(grass1Image);
 				panel2.add(l);
 			}
 		}
 		nextSize = game.getSIZE();
 		nextNumOfDragons = game.getNumDragons();
+		panel2.repaint();
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 	}
@@ -503,15 +490,23 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 				else if(c[y][x] == 'E')
 					l.setIcon(wallImage);
 				else if(c[y][x] == 'D')
-					l.setIcon(wallImage);
+					l.setIcon(dragonImage);
 				else if(c[y][x] == ' ')
-					l.setIcon(transparentImage);
+					l.setIcon(grass1Image);
 				panel2.add(l);
 			}
 		}
+		panel2.repaint();
 		frame.pack();
 	}
 
+	public void updateImagesSize(){
+		wallImage.setImage(wallImage.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroImage.setImage(heroImage.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		grass1Image.setImage(grass1Image.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		dragonImage.setImage(dragonImage.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == exit){
@@ -525,6 +520,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 				game.setDifficulty(nextMode);
 				game.setNumOfDragons(nextNumOfDragons2);
 				game.setSIZE(nextSize2);
+				updateImagesSize();
 				if(game.getSIZE() == 10){
 					game.setPreset(true);
 				}
@@ -735,7 +731,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 	}
-
+	
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 	}
