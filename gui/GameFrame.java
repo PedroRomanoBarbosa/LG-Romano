@@ -6,12 +6,15 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -19,10 +22,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -56,12 +61,14 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 	private JButton instructionsButton;
 	private JButton newGame, loadGameMain, exitGameMain, createLabirinth;
 	private GridLayout buttonLayout;
-	private GridLayout mazeLayout, frameLayout;
+	private GridLayout mazeLayout;
+	private BoxLayout frameLayout;
 	private JSlider sizeSlider, numDragonsSlider;
 	private JRadioButton one,two,three;
 	private ButtonGroup group;
 	private JPanel buttonPanel;
 	private int chooseKeyMode;
+	private ImageIcon wallImage, transparentImage, heroImage;
 
 
 
@@ -78,12 +85,35 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		createGameFrame();
 		createSettingsFrame();
 		mainMenu.setVisible(true);
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File("resources/black.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Image img2 = img.getScaledInstance(10, 10, Image.SCALE_FAST);
+		wallImage = new ImageIcon("resources/black.jpg");
+		
+		try {
+			img = ImageIO.read(new File("resources/transparent.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		img2 = img.getScaledInstance(10, 10, Image.SCALE_FAST);
+		transparentImage = new ImageIcon("resources/transparent.png");
+		
+		try {
+			img = ImageIO.read(new File("resources/hero.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		img2 = img.getScaledInstance(10, 10, Image.SCALE_FAST);
+		heroImage = new ImageIcon("resources/hero.png");
 	}
 
 	public void createGameFrame(){
 		generalPanel = new JPanel();
 		frame = new JFrame("D&D");
-
 		exit = new JButton("Exit to MainMenu");
 		exit.setFocusable(false);
 		restart = new JButton("Restart Game");
@@ -104,17 +134,33 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		frame.addKeyListener(this);
 		frame.setResizable(false);
 		buttonLayout = new GridLayout(6,1);
-		frameLayout = new GridLayout(1,2);
+		frameLayout = new BoxLayout(generalPanel,BoxLayout.X_AXIS);
 		mazeLayout = new GridLayout(game.getSIZE(),game.getSIZE());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		generalPanel.setLayout(frameLayout);
-
+		
 		panel.setLayout(buttonLayout);
 		panel2.setLayout(mazeLayout);
-
+		char[][] c = game.getMaze().getLab();
 		for(int y = 0; y < game.getSIZE(); y++){
 			for(int x = 0; x < game.getSIZE(); x++){
-				JLabel l = new JLabel(game.getMaze().getLab()[y][x] + "");
+				JLabel l = new JLabel();
+				if(c[y][x] == 'X')
+					l.setIcon(wallImage);
+				else if(c[y][x] == 'H')
+					l.setIcon(heroImage);
+				else if(c[y][x] == '/')
+					l.setIcon(wallImage);
+				else if(c[y][x] == '/')
+					l.setIcon(wallImage);
+				else if(c[y][x] == 'O')
+					l.setIcon(wallImage);
+				else if(c[y][x] == 'E')
+					l.setIcon(wallImage);
+				else if(c[y][x] == 'D')
+					l.setIcon(wallImage);
+				else if(c[y][x] == ' ')
+					l.setIcon(transparentImage);
 				panel2.add(l);
 			}
 		}
@@ -134,10 +180,13 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 
 		generalPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
-		panel2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
+		panel2.setBackground(Color.CYAN);
+		panel2.setPreferredSize(new Dimension(500,500));
+		
 		generalPanel.add(panel2);
 		generalPanel.add(panel);
+		panel.setBackground(Color.CYAN);
+		generalPanel.setBackground(Color.CYAN);
 		frame.add(generalPanel);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
@@ -208,7 +257,6 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		JSeparator separator = new JSeparator();
 		settingsPanel.setLayout(new BoxLayout(settingsPanel,BoxLayout.Y_AXIS));
 		settingsFrame = new JDialog(frame,"Settings");
-		
 		settingsFrame.addKeyListener(new KeyListener(){
 			@Override
 			public void keyPressed(KeyEvent arg0) {
@@ -229,8 +277,14 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 							chooseKeyMode = 0;
 							break;
 						case 3:
+							nextLeft = c;
+							leftButton.setText("LEFT - '" + c + "'");
+							chooseKeyMode = 0;
 							break;
 						case 4:
+							nextRight = c;
+							rightButton.setText("RIGHT - '" + c + "'");
+							chooseKeyMode = 0;
 							break;
 						}
 					}else{
@@ -404,7 +458,24 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		char[][] c = game.getMaze().getLab();
 		for(int y = 0; y < game.getSIZE(); y++){
 			for(int x = 0; x < game.getSIZE(); x++){
-				panel2.add( new JLabel("" + c[y][x]));
+				JLabel l = new JLabel();
+				if(c[y][x] == 'X')
+					l.setIcon(wallImage);
+				else if(c[y][x] == 'H')
+					l.setIcon(heroImage);
+				else if(c[y][x] == '/')
+					l.setIcon(wallImage);
+				else if(c[y][x] == '/')
+					l.setIcon(wallImage);
+				else if(c[y][x] == 'O')
+					l.setIcon(wallImage);
+				else if(c[y][x] == 'E')
+					l.setIcon(wallImage);
+				else if(c[y][x] == 'D')
+					l.setIcon(wallImage);
+				else if(c[y][x] == ' ')
+					l.setIcon(transparentImage);
+				panel2.add(l);
 			}
 		}
 		nextSize = game.getSIZE();
@@ -418,7 +489,24 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		char[][] c = game.getMaze().getLab();
 		for(int y = 0; y < game.getSIZE(); y++){
 			for(int x = 0; x < game.getSIZE(); x++){
-				panel2.add( new JLabel("" + c[y][x]));
+				JLabel l = new JLabel();
+				if(c[y][x] == 'X')
+					l.setIcon(wallImage);
+				else if(c[y][x] == 'H')
+					l.setIcon(heroImage);
+				else if(c[y][x] == '/')
+					l.setIcon(wallImage);
+				else if(c[y][x] == '/')
+					l.setIcon(wallImage);
+				else if(c[y][x] == 'O')
+					l.setIcon(wallImage);
+				else if(c[y][x] == 'E')
+					l.setIcon(wallImage);
+				else if(c[y][x] == 'D')
+					l.setIcon(wallImage);
+				else if(c[y][x] == ' ')
+					l.setIcon(transparentImage);
+				panel2.add(l);
 			}
 		}
 		frame.pack();
@@ -570,7 +658,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 			updateNewMaze();
 			mainMenu.setVisible(false);
 			frame.setVisible(true);
-			
+
 		}
 		else if(e.getSource() == createLabirinth){
 			System.exit(0);
