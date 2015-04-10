@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -46,7 +48,7 @@ import javax.swing.event.ChangeListener;
 import cli.Interface;
 import logic.GameState;
 
-public class GameFrame implements ActionListener, KeyListener, ChangeListener{
+public class GameFrame implements ActionListener, KeyListener, ChangeListener, MouseListener{
 
 	private int panelSize;
 	private GameState game;
@@ -73,19 +75,33 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 	private ImageIcon wallImage, heroImage, grass1Image, dragonImage, transparentImage;
 	private ImageIcon wall, hero, grass1, dragon, transparent;
 	private JLayeredPane layer;
-	
+
 	private JDialog chooseSize;
 	private JFrame createMaze;
 	private JPanel tablePanel,optionsPanel;
-	private JButton chooseHero, chooseSword, chooseShield, chooseDragons, chooseDards,chooseWalls, chooseBlank, backButton;
-	private JLabel numDragons, numDards, info;
+	private JButton chooseHero, chooseSword, chooseShield, chooseDragons, chooseDards,chooseWalls, chooseBlank, backButton, nextButton, cancel;
+	private ImageIcon wallImageNew, heroImageNew, grass1ImageNew, dragonImageNew, transparentImageNew;
+	private JLabel numDragons, numDards, info, chooseNewSizeLabel;
 	private JSlider sizeSliderNew;
 	private int sizeOfNew;
+	private char[][] newMaze;
+	private JLabel[][] labelArray;
+	private ImageIcon currentImage;
 
-
-
+	//Constructor
 	public GameFrame(GameState g){
 		game = g;
+		wall = new ImageIcon("resources/wall.png");
+		grass1 = new ImageIcon("resources/grass1.png");
+		hero = new ImageIcon("resources/sanic.png");
+		dragon = new ImageIcon("resources/illuminati.png");
+		transparent = new ImageIcon("resources/transparent.png");
+		wallImage = new ImageIcon();
+		grass1Image = new ImageIcon();
+		heroImage = new ImageIcon();
+		dragonImage = new ImageIcon();
+		transparentImage = new ImageIcon();
+
 		nextSize = game.getSIZE();
 		nextNumOfDragons = game.getNumDragons();
 		up = 'w';
@@ -93,32 +109,28 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		left = 'a';
 		right = 'd';
 		chooseKeyMode = -1;
-		panelSize = 600;
+		panelSize = 750;
 		createMainMenu();
 		createGameFrame();
 		createSettingsFrame();
 		createMazeTable();
 		mainMenu.setVisible(true);
 
-		wall = new ImageIcon("resources/wall.png");
-		grass1 = new ImageIcon("resources/grass1.png");
-		hero = new ImageIcon("resources/sanic.png");
-		dragon = new ImageIcon("resources/illuminati.png");
-		transparent = new ImageIcon("resources/transparent.png");
-
-		wallImage = new ImageIcon();
-		grass1Image = new ImageIcon();
-		heroImage = new ImageIcon();
-		dragonImage = new ImageIcon();
-		transparentImage = new ImageIcon();
 		updateImagesSize();
 	}
 
+
+	//Create fuctions
 	public void createMazeTable(){
-		sizeOfNew = 15;
+		wallImageNew = new ImageIcon();
+		grass1ImageNew = new ImageIcon();
+		heroImageNew = new ImageIcon();
+		dragonImageNew = new ImageIcon();
+		transparentImageNew = new ImageIcon();
 		JPanel general = new JPanel();
-		chooseSize = new JDialog();
+		JPanel general2 = new JPanel();
 		createMaze = new JFrame();
+		chooseSize = new JDialog(mainMenu,"Labirinth creator");
 		tablePanel = new JPanel();
 		optionsPanel = new JPanel();
 		chooseHero = new JButton("Hero");
@@ -129,18 +141,48 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		chooseWalls = new JButton("Walls");
 		chooseBlank = new JButton("Blanks");
 		backButton = new JButton("Back to main menu");
+		nextButton = new JButton("Next");
+		cancel = new JButton("Cancel");
+
 		info = new JLabel("INFO");
-		sizeSliderNew = new JSlider();
-		
+		JPanel ptest = new JPanel();
+		ptest.setLayout(new FlowLayout(FlowLayout.LEFT));
+		chooseNewSizeLabel = new JLabel("Choose the size of the maze: " + 15);
+		ptest.add(chooseNewSizeLabel);
+
+		sizeSliderNew = new JSlider(SwingConstants.HORIZONTAL,5,49,15);
+		sizeSliderNew.setPaintTicks(true);
+		sizeSliderNew.setMajorTickSpacing(6);
+		sizeSliderNew.setMinorTickSpacing(2);
+		sizeSliderNew.setPaintLabels(true);
+		sizeSliderNew.addChangeListener(this);
+
+		createMaze.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		general.setLayout(new BoxLayout(general,BoxLayout.X_AXIS));
-		tablePanel.setLayout(new GridLayout(sizeOfNew,sizeOfNew));
 		optionsPanel.setLayout(new BoxLayout(optionsPanel,BoxLayout.Y_AXIS));
-		chooseSize.setLayout(new BoxLayout(chooseSize,BoxLayout.Y_AXIS));
-		
+		general2.setLayout(new BoxLayout(general2,BoxLayout.Y_AXIS));
+		general2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
 		chooseSize.setModalityType(ModalityType.APPLICATION_MODAL);
 		chooseSize.setResizable(false);
-		createMaze.setResizable(true);
-		
+		chooseSize.setLocationRelativeTo(null);
+		createMaze.setResizable(false);
+
+		general2.add(ptest);
+		general2.add(sizeSliderNew);
+		JPanel p = new JPanel();
+		nextButton.addActionListener(this);
+		cancel.addActionListener(this);
+		p.add(nextButton);
+		p.add(cancel);
+		general2.add(p);
+		chooseSize.add(general2);
+
+		backButton.addActionListener(this);
+
+		createMaze.setLocationRelativeTo(null);
+
 		optionsPanel.add(info);
 		optionsPanel.add(chooseHero);
 		optionsPanel.add(chooseSword);
@@ -150,27 +192,40 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		optionsPanel.add(chooseWalls);
 		optionsPanel.add(chooseBlank);
 		optionsPanel.add(backButton);
-		
-		int newSize = (sizeOfNew/game.getSIZE()) * game.getSIZE();
-		panel2.removeAll();
-		panel2.setLayout(new GridLayout(game.getSIZE(),game.getSIZE()));
-		for(int y = 0; y < sizeOfNew; y++){
-			for(int x = 0; x < sizeOfNew; x++){
-				JLabel l = new JLabel("X");
-				tablePanel.add(l);
-			}
-		}
-		tablePanel.setPreferredSize(new Dimension(600, 600));
-		tablePanel.repaint();
-		
+
 		general.add(tablePanel);
 		general.add(optionsPanel);
 		createMaze.add(general);
+		chooseSize.pack();
 		createMaze.pack();
 		createMaze.setLocationRelativeTo(null);
 		createMaze.setVisible(false);
 	}
-	
+
+	public void createNewMaze(){
+		wallImageNew.setImage(wall.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		heroImageNew.setImage(hero.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		grass1ImageNew.setImage(grass1.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		dragonImageNew.setImage(dragon.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		tablePanel.setLayout(new GridLayout(sizeOfNew,sizeOfNew));
+		labelArray = new JLabel[sizeOfNew][sizeOfNew];
+		int newSize = (panelSize/sizeOfNew) * sizeOfNew;
+		tablePanel.removeAll();
+		tablePanel.setLayout(new GridLayout(sizeOfNew,sizeOfNew));
+		for(int y = 0; y < sizeOfNew; y++){
+			for(int x = 0; x < sizeOfNew; x++){
+				JLabel l = new JLabel();
+				l.addMouseListener(this);
+				l.setIcon(wallImageNew);
+				tablePanel.add(l);
+				labelArray[y][x] = l;
+			}
+		}
+		tablePanel.setPreferredSize(new Dimension(newSize, newSize));
+		tablePanel.repaint();
+		createMaze.pack();
+	}
+
 	public void createGameFrame(){
 		generalPanel = new JPanel();
 		layer = new JLayeredPane();
@@ -204,7 +259,6 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		layer2 = new JPanel();
 
 		panel.setLayout(buttonLayout);
-
 
 		layer1.setLayout(mazeLayout);
 		layer2.setLayout(mazeLayout);
@@ -497,6 +551,8 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		settingsFrame.setLocationRelativeTo(null);
 	}
 
+
+	//update functions
 	public void updateNewMaze(){
 		updateLayer();
 		nextSize = game.getSIZE();
@@ -520,8 +576,6 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 				JLabel l = new JLabel();
 				if(c[y][x] == 'X')
 					l.setIcon(wallImage);
-				else if(c[y][x] == ' ')
-					l.setIcon(grass1Image);
 				else if(c[y][x] == 'H')
 					l.setIcon(heroImage);
 				else if(c[y][x] == 'D')
@@ -540,10 +594,30 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		dragonImage.setImage(dragon.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 	}
 
+
+
+	//COMMANDS
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == exit){
 			frame.setVisible(false);
+			mainMenu.setLocationRelativeTo(null);
+			mainMenu.setVisible(true);
+		}
+		else if(e.getSource() == nextButton){
+			chooseSize.setVisible(false);
+			mainMenu.setVisible(false);
+			sizeOfNew = sizeSliderNew.getValue();
+			createNewMaze();
+			createMaze.setLocationRelativeTo(null);
+			createMaze.setVisible(true);
+		}
+		else if (e.getSource() == cancel) {
+			chooseSize.setVisible(false);
+		}
+		else if (e.getSource() == backButton) {
+			createMaze.setVisible(false);
 			mainMenu.setLocationRelativeTo(null);
 			mainMenu.setVisible(true);
 		}
@@ -685,14 +759,16 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 				three.setSelected(true);
 				break;
 			}
+			updateImagesSize();
 			updateNewMaze();
 			mainMenu.setVisible(false);
 			frame.setVisible(true);
 
 		}
 		else if(e.getSource() == createLabirinth){
-			mainMenu.setVisible(false);
-			createMaze.setVisible(true);
+			sizeSliderNew.setValue(15);
+			chooseSize.setLocationRelativeTo(null);
+			chooseSize.setVisible(true);
 		}
 		else if(e.getSource() == upButton){
 			errorLabel.setText("     ");
@@ -796,6 +872,52 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener{
 		else if(arg0.getSource() == numDragonsSlider){
 			numDragonsLabel.setText("Next number of dragons: " + numDragonsSlider.getValue());
 		}
+		else if(arg0.getSource() == sizeSliderNew){
+			if(sizeSliderNew.getValue() % 2 == 0){
+				chooseNewSizeLabel.setText("Choose the size of the maze: " + (sizeSliderNew.getValue() - 1));
+			}
+			else{
+				chooseNewSizeLabel.setText("Choose the size of the maze: " + sizeSliderNew.getValue());
+			}
+		}
+	}
+
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		for (int y = 0; y < labelArray.length; y++) {
+			for (int x = 0; x < labelArray.length; x++) {
+				if(x != 0 && y != 0 && x != (labelArray.length-1) && y != (labelArray.length-1)){
+					if(arg0.getSource() == labelArray[y][x]){
+						labelArray[y][x].setIcon(currentImage);
+					}
+				}
+			}
+		}
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+
+	}
+
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+
 	}
 
 }
