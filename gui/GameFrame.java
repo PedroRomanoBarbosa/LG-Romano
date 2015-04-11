@@ -72,14 +72,14 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	private ButtonGroup group;
 	private JPanel buttonPanel, layer1, layer2;
 	private int chooseKeyMode;
-	private ImageIcon wallImage, heroImage, grass1Image, dragonImage;
-	private ImageIcon wall, hero, grass1, dragon, transparent;
+	private ImageIcon wallImage, heroImage, grass1Image, dragonImage, swordImage, shieldImage, dardImage;
+	private ImageIcon wall, hero, grass1, dragon, transparent, sword, shield, dard;
 
 	private JDialog chooseSize;
 	private JFrame createMaze;
 	private JPanel tablePanel,optionsPanel;
-	private JButton chooseHero, chooseSword, chooseShield, chooseDragons, chooseDards,chooseWalls, chooseBlank, backButton, nextButton, cancel;
-	private ImageIcon wallImageNew, heroImageNew, grass1ImageNew, dragonImageNew, transparentImageNew;
+	private JButton chooseExit, chooseHero, chooseSword, chooseShield, chooseDragons, chooseDards,chooseWalls, chooseBlank, backButton, nextButton, cancel;
+	private ImageIcon wallImageNew, heroImageNew, grass1ImageNew, dragonImageNew, transparentImageNew, swordImageNew, shieldImageNew, dardImageNew;
 	private JLabel numDragons, numDards, info, chooseNewSizeLabel;
 	private JSlider sizeSliderNew;
 	private int sizeOfNew;
@@ -99,10 +99,16 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		hero = new ImageIcon("resources/sanic.png");
 		dragon = new ImageIcon("resources/illuminati.png");
 		transparent = new ImageIcon("resources/transparent.png");
+		sword = new ImageIcon("resources/sword.png");
+		shield = new ImageIcon("resources/shield.png");
+		dard = new ImageIcon("resources/dard.png");
 		wallImage = new ImageIcon();
 		grass1Image = new ImageIcon();
 		heroImage = new ImageIcon();
 		dragonImage = new ImageIcon();
+		swordImage = new ImageIcon();
+		shieldImage = new ImageIcon();
+		dardImage = new ImageIcon();
 
 		nextSize = game.getSIZE();
 		nextNumOfDragons = game.getNumDragons();
@@ -117,7 +123,6 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		createSettingsFrame();
 		createMazeTable();
 		mainMenu.setVisible(true);
-
 		updateImagesSize();
 	}
 
@@ -129,12 +134,16 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		heroImageNew = new ImageIcon();
 		dragonImageNew = new ImageIcon();
 		transparentImageNew = new ImageIcon();
+		swordImageNew = new ImageIcon();
+		shieldImageNew = new ImageIcon();
+		dardImageNew = new ImageIcon();
 		JPanel general = new JPanel();
 		JPanel general2 = new JPanel();
 		createMaze = new JFrame();
 		chooseSize = new JDialog(mainMenu,"Labirinth creator");
 		tablePanel = new JPanel();
 		optionsPanel = new JPanel();
+		chooseExit = new JButton("Exit");
 		chooseHero = new JButton("Hero");
 		chooseSword = new JButton("Sword");
 		chooseShield = new JButton("Shield");
@@ -146,7 +155,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		nextButton = new JButton("Next");
 		cancel = new JButton("Cancel");
 
-		info = new JLabel("INFO");
+		info = new JLabel("Choose the elements you want to insert.");
 		JPanel ptest = new JPanel();
 		ptest.setLayout(new FlowLayout(FlowLayout.LEFT));
 		chooseNewSizeLabel = new JLabel("Choose the size of the maze: " + 15);
@@ -162,7 +171,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		createMaze.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		general.setLayout(new BoxLayout(general,BoxLayout.X_AXIS));
-		optionsPanel.setLayout(new BoxLayout(optionsPanel,BoxLayout.Y_AXIS));
+		optionsPanel.setLayout(new GridLayout(9,1));
 		general2.setLayout(new BoxLayout(general2,BoxLayout.Y_AXIS));
 		general2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -207,6 +216,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		general.add(tablePanel);
 		general.add(optionsPanel);
 		createMaze.add(general);
+		createMaze.setBackground(Color.CYAN);
 		chooseSize.pack();
 		createMaze.pack();
 		createMaze.setLocationRelativeTo(null);
@@ -219,6 +229,10 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		grass1ImageNew.setImage(grass1.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
 		dragonImageNew.setImage(dragon.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
 		transparentImageNew.setImage(transparent.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		swordImageNew.setImage(sword.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		shieldImageNew.setImage(shield.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		dardImageNew.setImage(dard.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		
 		tablePanel.setLayout(new GridLayout(sizeOfNew,sizeOfNew));
 
 		heroValid = true;
@@ -274,13 +288,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		generalPanel.setLayout(frameLayout);
 
-		layer1 = new JPanel();
-		layer2 = new JPanel();
-
 		panel.setLayout(buttonLayout);
-
-		layer1.setLayout(mazeLayout);
-		layer2.setLayout(mazeLayout);
 		panel2.setLayout(mazeLayout);
 
 		updateLayer();
@@ -323,7 +331,6 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		title.setAlignmentX(JPanel.CENTER_ALIGNMENT);
 		title.setFont(new Font("Impact",1,50));
 		titlePanel.add(title);
-
 
 		JPanel buttonMainMenuPanel = new JPanel();
 		buttonMainMenuPanel.setLayout(new BoxLayout(buttonMainMenuPanel,BoxLayout.Y_AXIS));
@@ -597,7 +604,13 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 					l.setIcon(wallImage);
 				else if(c[y][x] == 'H')
 					l.setIcon(heroImage);
-				else if(c[y][x] == 'D')
+				else if(c[y][x] == 'E')
+					l.setIcon(swordImage);
+				else if(c[y][x] == 'O')
+					l.setIcon(shieldImage);
+				else if(c[y][x] == '/')
+					l.setIcon(dardImage);
+				else if(c[y][x] == 'D' || c[y][x] == 'F')
 					l.setIcon(dragonImage);
 				panel2.add(l);
 			}
@@ -611,6 +624,9 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		heroImage.setImage(hero.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 		grass1Image.setImage(grass1.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 		dragonImage.setImage(dragon.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		swordImage.setImage(sword.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		shieldImage.setImage(shield.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		dardImage.setImage(dard.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 	}
 
 
@@ -621,6 +637,11 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			frame.setVisible(false);
 			mainMenu.setLocationRelativeTo(null);
 			mainMenu.setVisible(true);
+		}
+		else if(e.getSource() == chooseDards){
+			valid = true;
+			currentImage = dardImage;
+			currentChar = '/';
 		}
 		else if(e.getSource() == chooseWalls){
 			valid = true;
@@ -644,6 +665,22 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 				valid = true;
 			currentImage = heroImageNew;
 			currentChar = 'H';
+		}
+		else if(e.getSource() == chooseSword){
+			if(swordValid == false)
+				valid = false;
+			else
+				valid = true;
+			currentImage = swordImageNew;
+			currentChar = 'E';
+		}
+		else if(e.getSource() == chooseShield){
+			if(shieldValid == false)
+				valid = false;
+			else
+				valid = true;
+			currentImage = shieldImageNew;
+			currentChar = 'O';
 		}
 		else if(e.getSource() == nextButton){
 			chooseSize.setVisible(false);
@@ -927,7 +964,6 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		}
 	}
 
-
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 
@@ -951,15 +987,15 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 					if(arg0.getSource() == labelArray[y][x]){
 						if(currentChar == 'H' && heroValid == false)
 							valid = false;
-						else if(currentChar == 'H' && heroValid == false)
+						else if(currentChar == 'E' && swordValid == false)
 							valid = false;
-						else if(currentChar == 'H' && heroValid == false)
+						else if(currentChar == 'O' && shieldValid == false)
 							valid = false;
-						else if(currentChar == 'H' && heroValid == false)
+						else if(currentChar == 'S' && exitValid == false)
 							valid = false;
 
 						if(valid == false){
-							System.out.println("Invalid!");
+							
 						}else{
 							labelArray[y][x].setIcon(currentImage);
 							if(newMaze[y][x] == 'H' && currentChar != 'H'){
