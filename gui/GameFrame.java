@@ -81,7 +81,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	heroShieldUpImage, heroShieldDownImage, heroShieldLeftImage, heroShieldRightImage,
 	heroDardUpImage, heroDardDownImage, heroDardLeftImage, heroDardRightImage,
 	heroSwordShieldUpImage, heroSwordShieldDownImage, heroSwordShieldLeftImage, heroSwordShieldRightImage,
-	heroUpDardSwordImage, heroDardSwordDownImage, heroDardSwordLeftImage, heroDardSwordRightImage,
+	heroDardSwordUpImage, heroDardSwordDownImage, heroDardSwordLeftImage, heroDardSwordRightImage,
 	heroDardShieldUpImage, heroDardShieldDownImage, heroDardShieldLeftImage, heroDardShieldRightImage,
 	heroSwordShieldDardUpImage, heroSwordShieldDardDownImage, heroSwordShieldDardLeftImage, heroSwordShieldDardRightImage;
 	
@@ -90,7 +90,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	heroShieldUp, heroShieldDown, heroShieldLeft, heroShieldRight,
 	heroDardUp, heroDardDown, heroDardLeft, heroDardRight,
 	heroSwordShieldUp, heroSwordShieldDown, heroSwordShieldLeft, heroSwordShieldRight,
-	heroUpDardSword, heroDardSwordDown, heroDardSwordLeft, heroDardSwordRight,
+	heroDardSwordUp, heroDardSwordDown, heroDardSwordLeft, heroDardSwordRight,
 	heroDardShieldUp, heroDardShieldDown, heroDardShieldLeft, heroDardShieldRight,
 	heroSwordShieldDardUp, heroSwordShieldDardDown, heroSwordShieldDardLeft, heroSwordShieldDardRight;
 
@@ -157,7 +157,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		heroSwordShieldLeft = new ImageIcon("resources/heroSwordShieldLeft.png");
 		heroSwordShieldRight = new ImageIcon("resources/heroSwordShieldRight.png");
 
-		heroUpDardSword = new ImageIcon("resources/heroUpDardSword.png");
+		heroDardSwordUp = new ImageIcon("resources/heroDardSwordUp.png");
 		heroDardSwordDown = new ImageIcon("resources/heroDardSwordDown.png");
 		heroDardSwordLeft = new ImageIcon("resources/heroDardSwordLeft.png");
 		heroDardSwordRight = new ImageIcon("resources/heroDardSwordRight.png");
@@ -206,7 +206,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		heroSwordShieldLeftImage = new ImageIcon();
 		heroSwordShieldRightImage = new ImageIcon();
 
-		heroUpDardSwordImage = new ImageIcon();
+		heroDardSwordUpImage = new ImageIcon();
 		heroDardSwordDownImage = new ImageIcon();
 		heroDardSwordLeftImage = new ImageIcon();
 		heroDardSwordRightImage = new ImageIcon();
@@ -843,7 +843,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 				else if(c[y][x] == Hero.heroDardAndSword){
 					switch(direction){
 					case 1: 
-						l.setIcon(heroUpDardSwordImage);
+						l.setIcon(heroDardSwordUpImage);
 						break;
 					case 2:
 						l.setIcon(heroDardSwordDownImage);
@@ -941,7 +941,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		heroSwordShieldLeftImage.setImage(heroSwordShieldLeft.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 		heroSwordShieldRightImage.setImage(heroSwordShieldRight.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 
-		heroUpDardSwordImage.setImage(heroUpDardSword.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroDardSwordUpImage.setImage(heroDardSwordUp.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 		heroDardSwordDownImage.setImage(heroDardSwordDown.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 		heroDardSwordLeftImage.setImage(heroDardSwordLeft.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 		heroDardSwordRightImage.setImage(heroDardSwordRight.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
