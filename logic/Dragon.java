@@ -26,7 +26,7 @@ public class Dragon extends Element{
 	/**
 	 * Dragon constructor.
 	 * @param sym dragon symbol
-	 * @param state state of the dragon<br>
+	 * @param state of the dragon<br>
 	 * 		  true - awakened<br>
 	 *        false - asleep
 	 * @param espadaDragao <br>
@@ -134,7 +134,7 @@ public class Dragon extends Element{
 	}
 
 	public String toString(){
-		return "Dragao";
+		return "Dragon";
 	}
 	/**
 	 * Increments counter ofthe dragon.

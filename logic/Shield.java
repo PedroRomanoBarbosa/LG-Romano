@@ -8,6 +8,6 @@ public class Shield extends Element{
 	}
 	
 	public String toString(){
-		return "Escudo";
+		return "Shield";
 	}
 }

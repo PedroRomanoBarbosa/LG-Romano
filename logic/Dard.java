@@ -15,6 +15,6 @@ public class Dard extends Element{
 	}
 	
 	public String toString(){
-		return "Dardo";
+		return "Dard";
 	}
 }

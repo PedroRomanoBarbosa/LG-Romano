@@ -80,16 +80,20 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	private JDialog chooseSize;
 	private JFrame createMaze;
 	private JPanel tablePanel,optionsPanel;
-	private JButton chooseExit, chooseHero, chooseSword, chooseShield, chooseDragons, chooseDards,chooseWalls, chooseBlank, backButton, nextButton, cancel;
+	private JButton chooseExit, chooseHero, chooseSword, chooseShield, chooseDragons, chooseDards,chooseWalls, chooseBlank, backButton, nextButton, cancel, saveNewMaze;
 	private ImageIcon wallImageNew, heroImageNew, grass1ImageNew, dragonImageNew, transparentImageNew, swordImageNew, shieldImageNew, dardImageNew;
 	private JLabel numDragons, numDards, info, chooseNewSizeLabel;
 	private JSlider sizeSliderNew;
+	private JRadioButton one2,two2,three2;
+	private ButtonGroup group2;
 	private int sizeOfNew;
 	private char[][] newMaze;
 	private JLabel[][] labelArray;
 	private ImageIcon currentImage;
 	private char currentChar;
 	private boolean heroValid, swordValid, shieldValid, exitValid, valid;
+	private int exitx, exity;
+	private boolean heroExists, exitExists;
 
 	private JFileChooser fileChooser;
 	private String filePath;
@@ -159,9 +163,11 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		chooseBlank = new JButton("Blanks");
 		backButton = new JButton("Back to main menu");
 		nextButton = new JButton("Next");
+		saveNewMaze = new JButton("Save Labirinth");
 		cancel = new JButton("Cancel");
 
-		info = new JLabel("Choose the elements you want to insert.");
+		info = new JLabel("<html>Choose the elements you want to insert.<br>"
+				+ "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(An hero is required)</html>");
 		JPanel ptest = new JPanel();
 		ptest.setLayout(new FlowLayout(FlowLayout.LEFT));
 		chooseNewSizeLabel = new JLabel("Choose the size of the maze: " + 15);
@@ -177,7 +183,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		createMaze.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		general.setLayout(new BoxLayout(general,BoxLayout.X_AXIS));
-		optionsPanel.setLayout(new GridLayout(9,1));
+		optionsPanel.setLayout(new GridLayout(13,1));
 		general2.setLayout(new BoxLayout(general2,BoxLayout.Y_AXIS));
 		general2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -206,8 +212,28 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		chooseDards.addActionListener(this);
 		chooseWalls.addActionListener(this);
 		chooseBlank.addActionListener(this);
+		saveNewMaze.addActionListener(this);
 
 		optionsPanel.add(info);
+		JPanel buttonPanel2 = new JPanel();
+		JPanel buttonPanel3 = new JPanel();
+		JPanel buttonPanel4 = new JPanel();
+		one2 = new JRadioButton("Immobile dragons");
+		two2 = new JRadioButton("Roamming dragons");
+		three2 = new JRadioButton("Roamming dragons + asleep");
+		group2 = new ButtonGroup();
+
+		one2.setSelected(true);
+		group2.add(one2);
+		group2.add(two2);
+		group2.add(three2);
+		buttonPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+		buttonPanel3.setLayout(new FlowLayout(FlowLayout.LEFT));
+		buttonPanel4.setLayout(new FlowLayout(FlowLayout.LEFT));
+		buttonPanel2.add(one2);
+		buttonPanel3.add(two2);
+		buttonPanel4.add(three2);
+
 		optionsPanel.add(chooseHero);
 		optionsPanel.add(chooseSword);
 		optionsPanel.add(chooseShield);
@@ -215,6 +241,10 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		optionsPanel.add(chooseDards);
 		optionsPanel.add(chooseWalls);
 		optionsPanel.add(chooseBlank);
+		optionsPanel.add(buttonPanel2);
+		optionsPanel.add(buttonPanel3);
+		optionsPanel.add(buttonPanel4);
+		optionsPanel.add(saveNewMaze);
 		optionsPanel.add(backButton);
 		optionsPanel.setBackground(Color.CYAN);
 		tablePanel.setBackground(Color.CYAN);
@@ -346,7 +376,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		newGame = new JButton("New Game");
 		loadGameMain = new JButton("load Game");
 		exitGameMain = new JButton("Exit");
-		createLabirinth = new JButton("Create Labirinth");
+		createLabirinth = new JButton("Create game");
 		newGame.setAlignmentX(JPanel.CENTER_ALIGNMENT);
 		loadGameMain.setAlignmentX(JPanel.CENTER_ALIGNMENT);
 		exitGameMain.setAlignmentX(JPanel.CENTER_ALIGNMENT);
@@ -598,6 +628,16 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	public void play(){
 		updateLayer();
 		frame.pack();
+		if(game.getHero().getState() == false){
+			JOptionPane.showMessageDialog(frame,"You lost the game!",  "D&D", JOptionPane.INFORMATION_MESSAGE);
+			frame.setVisible(false);
+			mainMenu.setVisible(true);
+		}
+		else if(game.getState() == false){
+			JOptionPane.showMessageDialog(frame,"You won the game!",  "D&D", JOptionPane.INFORMATION_MESSAGE);
+			frame.setVisible(false);
+			mainMenu.setVisible(true);
+		}
 	}
 
 	public void updateLayer(){
@@ -645,6 +685,31 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			frame.setVisible(false);
 			mainMenu.setLocationRelativeTo(null);
 			mainMenu.setVisible(true);
+		}
+		else if(e.getSource() == saveNewMaze){
+			if(heroExists){
+				int dif = 1;
+				if(two2.isSelected())
+					dif = 2;
+				else if(three2.isSelected())
+					dif = 3;
+				GameState g = new GameState(newMaze,dif,sizeOfNew,exitx,exity);
+				int result = fileChooser.showSaveDialog(frame);
+				if(result == JFileChooser.APPROVE_OPTION){
+					filePath = fileChooser.getSelectedFile().getPath();
+					try {
+						writeToFile(g);
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					JOptionPane.showMessageDialog(frame,"Your game was saved!",  "Save game", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}else{
+				JOptionPane.showMessageDialog(frame,"You don't have a hero assigned!",  "Save game", JOptionPane.INFORMATION_MESSAGE);
+			}
+
 		}
 		else if(e.getSource() == chooseDards){
 			valid = true;
@@ -694,7 +759,11 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			chooseSize.setVisible(false);
 			mainMenu.setVisible(false);
 			sizeOfNew = sizeSliderNew.getValue();
+			if(sizeOfNew % 2 == 0){
+				sizeOfNew = sizeOfNew - 1;
+			}
 			currentImage = transparentImageNew;
+			currentChar = ' ';
 			updateImagesSize();
 			createNewMaze();
 			createMaze.setLocationRelativeTo(null);
@@ -703,6 +772,8 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			shieldValid = true;
 			exitValid = true;
 			valid = true;
+			heroExists = false;
+			exitExists = false;
 			createMaze.setVisible(true);
 		}
 		else if (e.getSource() == cancel) {
@@ -740,10 +811,10 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		}
 		else if(e.getSource() == saveGame){
 			int result = fileChooser.showSaveDialog(frame);
-			filePath = fileChooser.getSelectedFile().getPath();
 			if(result == JFileChooser.APPROVE_OPTION){
+				filePath = fileChooser.getSelectedFile().getPath();
 				try {
-					writeToFile();
+					writeToFile(game);
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {
@@ -958,9 +1029,9 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	public void keyTyped(KeyEvent arg0) {
 	}
 
-	public void writeToFile() throws FileNotFoundException, IOException{
+	public void writeToFile(GameState g) throws FileNotFoundException, IOException{
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filePath + ".bin"));
-		out.writeObject(game);
+		out.writeObject(g);
 		out.close();
 	}
 
@@ -1026,9 +1097,12 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 						if(valid == false){
 
 						}else{
+							if(currentChar == 'H')
+								heroExists = true;
 							labelArray[y][x].setIcon(currentImage);
 							if(newMaze[y][x] == 'H' && currentChar != 'H'){
 								heroValid = true;
+								heroExists = false;
 							}else if(newMaze[y][x] == 'E' && currentChar != 'E'){
 								swordValid = true;
 							}else if(newMaze[y][x] == 'O' && currentChar != 'O'){
@@ -1046,6 +1120,23 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 							else if(currentChar == 'S')
 								exitValid = false;
 						}
+					}
+				}
+				else{
+					if(arg0.getSource() == labelArray[y][x] && currentChar == ' ' 
+							&& (x != 0 || y != 0) 
+							&& (x != (newMaze.length-1) || y != (newMaze.length-1))
+							&& (x != 0 || y != (newMaze.length-1))
+							&& (x != (newMaze.length-1) || y != 0)){
+						if(exitExists){
+						labelArray[exity][exitx].setIcon(wallImageNew);
+						newMaze[exity][exitx] = 'X';
+						}
+						labelArray[y][x].setIcon(currentImage);
+						newMaze[y][x] = 'S';
+						exitx = x;
+						exity = y;
+						exitExists = true;
 					}
 				}
 			}

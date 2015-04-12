@@ -16,6 +16,7 @@ public class GameState implements Serializable{
 	private Hero hero;
 	private boolean preset;
 	private int numDragons;
+	private int numDards;
 	private int SIZE;
 	private Dragon dragon;
 	private Sword sword;
@@ -23,16 +24,67 @@ public class GameState implements Serializable{
 	private Dard dard;
 	private ArrayList<Element> elements = new ArrayList<Element>();
 	private ArrayList<Dragon> dragons = new ArrayList<Dragon>();
+	private ArrayList<Dard> dards = new ArrayList<Dard>();
 	private boolean state;
 	private int difficulty; 
 
 
-	
+
 	/**
 	 * Simple constructor.
 	 */
 	public GameState(){
 		numDragons = 2;
+	}
+
+	public GameState(char[][] maze, int dif, int size, int exitx, int exity){
+		SIZE = size;
+		difficulty = dif;
+		preset = false;
+		state = true;
+		for (int i = 0; i < maze.length; i++) {
+			for (int j = 0; j < maze.length; j++) {
+				System.out.print(maze[i][j]);
+			}
+			System.out.print("\n");
+		}
+		labirinto = new Maze(maze, size, exitx, exity);
+		elements.clear();
+		dragons.clear();
+		numDragons = 0;
+		numDards = 0;
+		for (int y = 0; y < maze.length; y++) {
+			for (int x = 0; x < maze.length; x++) {
+				if(maze[y][x] == 'H'){
+					hero = new Hero('H',true,false);
+					hero.setPosition(x, y);
+					elements.add(hero);
+					System.out.println("Hero Exists!");
+				}
+				else if(maze[y][x] == 'D'){
+					numDragons++;
+					Dragon d = new Dragon('D',true,false);
+					d.setPosition(x, y);
+					dragons.add(d);
+				}
+				else if(maze[y][x] == '/'){
+					numDards++;
+					Dard d = new Dard('/');
+					d.setPosition(x, y);
+					dards.add(d);
+				}
+				else if(maze[y][x] == 'E'){
+					Sword s = new Sword('E',true);
+					s.setPosition(x, y);
+					elements.add(s);
+				}
+				else if(maze[y][x] == 'O'){
+					Shield s = new Shield('E');
+					s.setPosition(x, y);
+					elements.add(s);
+				}
+			}
+		}
 	}
 	/**
 	 * Returns the hero object of this gamestate.
@@ -55,27 +107,27 @@ public class GameState implements Serializable{
 	public int getSIZE() {
 		return SIZE;
 	}
-	
+
 	public int getNumDragons(){
 		return numDragons;
 	}
-	
+
 	public void setNumOfDragons(int n){
 		numDragons = n;
 	}
-	
+
 	public void setSIZE(int s){
 		SIZE = s;
 	}
-	
+
 	public void setPreset(boolean pre){
 		preset = pre;
 	}
-	
+
 	public boolean getPreset(){
 		return preset;
 	}
-	
+
 	/**
 	 * Sets the hero for this gamestate.
 	 * @param h - hero
@@ -118,6 +170,7 @@ public class GameState implements Serializable{
 		SIZE = size;
 		preset = false;
 	}
+
 	public int getDifficulty() {
 		return difficulty;
 	}
@@ -188,6 +241,7 @@ public class GameState implements Serializable{
 				if(hero.hasShield() == false){
 					if(this.checkDragonRange() == true){
 						labirinto.getLab()[hero.getPonto().getYpos()][hero.getPonto().getXpos()] = ' ';
+						hero.setState(false);
 						return false;
 					}
 				}
@@ -364,7 +418,8 @@ public class GameState implements Serializable{
 				(sul == 'F') || (norte == 'F') || (este == 'F') || (oeste == 'F') ||
 				(sul == 'f') || (norte == 'f') || (este == 'f') || (oeste == 'f')){
 			if( hero.getSymbol() == Hero.armedSymbol || hero.getSymbol() == Hero.heroDardAndSword || hero.getSymbol() == Hero.heroSwordAndShield || hero.getSymbol() == Hero.heroDardAndShieldAndSword){
-				dragon.setState(false);
+				if(dragon != null)
+					dragon.setState(false);
 				killAdjacentDragons(norte, sul, este, oeste);
 				return 0;
 			}
@@ -385,13 +440,18 @@ public class GameState implements Serializable{
 	 */
 	public void removeElement(String tipo, int x, int y){
 		for(int i = 0; i < elements.size(); i++){
-			if( elements.get(i).toString().equals("Espada") && elements.get(i).getPonto().getXpos() == x && elements.get(i).getPonto().getYpos() == y){
+			if( elements.get(i).getPonto().getXpos() == x && elements.get(i).getPonto().getYpos() == y){
 				elements.remove(i);
 			}
 		}
 		for(int i = 0; i < dragons.size(); i++){
-			if( dragons.get(i).toString().equals("Dragao") && dragons.get(i).getPonto().getXpos() == x && dragons.get(i).getPonto().getYpos() == y){
+			if( dragons.get(i).getPonto().getXpos() == x && dragons.get(i).getPonto().getYpos() == y){
 				dragons.remove(i);
+			}
+		}
+		for (int i = 0; i < dards.size(); i++) {
+			if( dards.get(i).getPonto().getXpos() == x && dards.get(i).getPonto().getYpos() == y){
+				dards.remove(i);
 			}
 		}
 	}
@@ -401,12 +461,10 @@ public class GameState implements Serializable{
 	 */
 	public void moveDragons(){
 		for(int i = 0; i < dragons.size(); i++){
-			if( dragons.get(i).toString().equals("Dragao")){
-				if(difficulty == 3){
-					dragons.get(i).incCounter();
-				}
-				this.moveDragao(dragons.get(i));
+			if(difficulty == 3){
+				dragons.get(i).incCounter();
 			}
+			this.moveDragao(dragons.get(i));
 		}
 	}
 	/**
@@ -661,8 +719,8 @@ public class GameState implements Serializable{
 		}
 		addElements();
 	}
-	
-	
+
+
 	///////////////JUNIT////////////////////////////
 	/**
 	 * [JUNIT function] - Returns dragon

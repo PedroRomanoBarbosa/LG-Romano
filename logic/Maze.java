@@ -17,6 +17,12 @@ public class Maze implements Serializable{
 		exit = gerador.getExit();
 	}
 	
+	public Maze(char[][] m, int s, int exitx, int exity){
+		SIZE = s;
+		lab = m;
+		exit = new Point(exitx,exity);
+	}
+	
 	public Maze(int size){
 		Generator gerador = new Generator(size);
 		this.SIZE = size;
