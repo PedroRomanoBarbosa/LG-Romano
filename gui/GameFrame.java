@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -32,6 +33,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -89,11 +91,15 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	private char currentChar;
 	private boolean heroValid, swordValid, shieldValid, exitValid, valid;
 
+	private JFileChooser fileChooser;
+	private String filePath;
+
 
 
 	//Constructor
 	public GameFrame(GameState g){
 		game = g;
+		filePath = "";
 		wall = new ImageIcon("resources/wall.png");
 		grass1 = new ImageIcon("resources/grass1.png");
 		hero = new ImageIcon("resources/sanic.png");
@@ -232,7 +238,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		swordImageNew.setImage(sword.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
 		shieldImageNew.setImage(shield.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
 		dardImageNew.setImage(dard.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
-		
+
 		tablePanel.setLayout(new GridLayout(sizeOfNew,sizeOfNew));
 
 		heroValid = true;
@@ -319,6 +325,8 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 
 	public void createMainMenu(){
 		mainMenu = new JFrame("D&D");
+		fileChooser = new JFileChooser();
+		fileChooser.setVisible(true);
 		nextSize2 = game.getSIZE();
 		nextNumOfDragons2 = game.getNumDragons();
 		mainMenu.setResizable(false);
@@ -640,7 +648,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		}
 		else if(e.getSource() == chooseDards){
 			valid = true;
-			currentImage = dardImage;
+			currentImage = dardImageNew;
 			currentChar = '/';
 		}
 		else if(e.getSource() == chooseWalls){
@@ -686,6 +694,8 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			chooseSize.setVisible(false);
 			mainMenu.setVisible(false);
 			sizeOfNew = sizeSliderNew.getValue();
+			currentImage = transparentImageNew;
+			updateImagesSize();
 			createNewMaze();
 			createMaze.setLocationRelativeTo(null);
 			heroValid = true;
@@ -729,48 +739,60 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			}
 		}
 		else if(e.getSource() == saveGame){
-			try {
-				writeToFile();
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			int result = fileChooser.showSaveDialog(frame);
+			filePath = fileChooser.getSelectedFile().getPath();
+			if(result == JFileChooser.APPROVE_OPTION){
+				try {
+					writeToFile();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				JOptionPane.showMessageDialog(frame,"Your game was saved!",  "Save game", JOptionPane.INFORMATION_MESSAGE);
 			}
-			JOptionPane.showMessageDialog(null,"Your game was saved!",  "Save game", JOptionPane.INFORMATION_MESSAGE);
 		}
 		else if(e.getSource() == loadGame){
-			try {
-				readFile();
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
+			int result = fileChooser.showOpenDialog(frame);
+			boolean flag = true;
+			if(result == JFileChooser.APPROVE_OPTION){
+				filePath = fileChooser.getSelectedFile().getPath();
+				try {
+					readFile();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					flag = false;
+					JOptionPane.showMessageDialog(frame, "Invalid file!");
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+				}
+				if(flag){
+					updateImagesSize();
+					updateNewMaze();
+					nextSize2 = game.getSIZE();
+					nextNumOfDragons2 = game.getNumDragons();
+					nextSize = game.getSIZE();
+					nextNumOfDragons = game.getNumDragons();
+					nextMode = game.getDifficulty();
+					sizeSlider.setValue(nextSize2);
+					sizeLabel.setText("Size of the new maze: " + sizeSlider.getValue());
+					numDragonsSlider.setValue(nextNumOfDragons2);
+					numDragonsLabel.setText("Next number of dragons: " + numDragonsSlider.getValue());
+					switch(nextMode){
+					case 1:
+						one.setSelected(true);
+						break;
+					case 2:
+						two.setSelected(true);
+						break;
+					case 3:
+						three.setSelected(true);
+						break;
+					}
+					JOptionPane.showMessageDialog(frame,"Your game was loaded!",  "Load game", JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
-			updateImagesSize();
-			updateNewMaze();
-			nextSize2 = game.getSIZE();
-			nextNumOfDragons2 = game.getNumDragons();
-			nextSize = game.getSIZE();
-			nextNumOfDragons = game.getNumDragons();
-			nextMode = game.getDifficulty();
-			sizeSlider.setValue(nextSize2);
-			sizeLabel.setText("Size of the new maze: " + sizeSlider.getValue());
-			numDragonsSlider.setValue(nextNumOfDragons2);
-			numDragonsLabel.setText("Next number of dragons: " + numDragonsSlider.getValue());
-			switch(nextMode){
-			case 1:
-				one.setSelected(true);
-				break;
-			case 2:
-				two.setSelected(true);
-				break;
-			case 3:
-				three.setSelected(true);
-				break;
-			}
-			JOptionPane.showMessageDialog(null,"Your game was loaded!",  "Load game", JOptionPane.INFORMATION_MESSAGE);
 		}
 		else if(e.getSource() == settings){
 			settingsFrame.setVisible(true);
@@ -812,40 +834,47 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			frame.setVisible(true);
 		}
 		else if(e.getSource() == loadGameMain){
-			try {
-				readFile();
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
+			int result = fileChooser.showOpenDialog(mainMenu);
+			boolean flag = true;
+			if(result == JFileChooser.APPROVE_OPTION){
+				filePath = fileChooser.getSelectedFile().getPath();
+				try {
+					readFile();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					flag = false;
+					JOptionPane.showMessageDialog(mainMenu, "Invalid file!");
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+				}
+				if(flag){
+					nextSize2 = game.getSIZE();
+					nextSize = game.getSIZE();
+					nextNumOfDragons = game.getNumDragons();
+					nextNumOfDragons2 = game.getNumDragons();
+					errorLabel.setText("        ");
+					sizeSlider.setValue(game.getSIZE());
+					sizeLabel.setText("Size of the new maze: " + game.getSIZE());
+					numDragonsSlider.setValue(game.getNumDragons());
+					numDragonsLabel.setText("Next number of dragons: " + numDragonsSlider.getValue());
+					switch(game.getDifficulty()){
+					case 1:
+						one.setSelected(true);
+						break;
+					case 2:
+						two.setSelected(true);
+						break;
+					case 3:
+						three.setSelected(true);
+						break;
+					}
+					updateImagesSize();
+					updateNewMaze();
+					mainMenu.setVisible(false);
+					frame.setVisible(true);
+				}
 			}
-			nextSize2 = game.getSIZE();
-			nextSize = game.getSIZE();
-			nextNumOfDragons = game.getNumDragons();
-			nextNumOfDragons2 = game.getNumDragons();
-			errorLabel.setText("        ");
-			sizeSlider.setValue(game.getSIZE());
-			sizeLabel.setText("Size of the new maze: " + game.getSIZE());
-			numDragonsSlider.setValue(game.getNumDragons());
-			numDragonsLabel.setText("Next number of dragons: " + numDragonsSlider.getValue());
-			switch(game.getDifficulty()){
-			case 1:
-				one.setSelected(true);
-				break;
-			case 2:
-				two.setSelected(true);
-				break;
-			case 3:
-				three.setSelected(true);
-				break;
-			}
-			updateImagesSize();
-			updateNewMaze();
-			mainMenu.setVisible(false);
-			frame.setVisible(true);
-
 		}
 		else if(e.getSource() == createLabirinth){
 			sizeSliderNew.setValue(15);
@@ -930,13 +959,13 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	}
 
 	public void writeToFile() throws FileNotFoundException, IOException{
-		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("save.bin"));
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filePath + ".bin"));
 		out.writeObject(game);
 		out.close();
 	}
 
-	public void readFile() throws FileNotFoundException, IOException, ClassNotFoundException{
-		ObjectInputStream in = new ObjectInputStream(new FileInputStream("save.bin"));
+	public void readFile() throws FileNotFoundException, StreamCorruptedException, IOException, ClassNotFoundException{
+		ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath));
 		game = (GameState) in.readObject();
 		in.close();
 	}
@@ -995,7 +1024,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 							valid = false;
 
 						if(valid == false){
-							
+
 						}else{
 							labelArray[y][x].setIcon(currentImage);
 							if(newMaze[y][x] == 'H' && currentChar != 'H'){
