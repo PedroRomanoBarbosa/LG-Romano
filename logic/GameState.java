@@ -569,6 +569,13 @@ public class GameState implements Serializable{
 
 	}
 	/**
+	 * Return array of elements.
+	 * @return elements
+	 */
+	public ArrayList<Element> getElements() {
+		return elements;
+	}
+	/**
 	 * Kills all adjacent dragons in all directions.
 	 * @param norte north position
 	 * @param sul south position

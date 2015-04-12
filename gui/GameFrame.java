@@ -49,6 +49,7 @@ import javax.swing.event.ChangeListener;
 
 import cli.Interface;
 import logic.GameState;
+import logic.Hero;
 
 public class GameFrame implements ActionListener, KeyListener, ChangeListener, MouseListener{
 
@@ -74,14 +75,31 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	private ButtonGroup group;
 	private JPanel buttonPanel, layer1, layer2;
 	private int chooseKeyMode;
-	private ImageIcon wallImage, heroImage, grass1Image, dragonImage, swordImage, shieldImage, dardImage;
-	private ImageIcon wall, hero, grass1, dragon, transparent, sword, shield, dard;
+	private ImageIcon wallImage, heroImage, grass1Image, dragonImage, swordImage, shieldImage, dardImage, groundImage, ExitImage, 
+	heroUpImage, heroDownImage, heroLeftImage, heroRightImage,
+	heroSwordUpImage, heroSwordDownImage, heroSwordLeftImage, heroSwordRightImage,
+	heroShieldUpImage, heroShieldDownImage, heroShieldLeftImage, heroShieldRightImage,
+	heroDardUpImage, heroDardDownImage, heroDardLeftImage, heroDardRightImage,
+	heroSwordShieldUpImage, heroSwordShieldDownImage, heroSwordShieldLeftImage, heroSwordShieldRightImage,
+	heroUpDardSwordImage, heroDardSwordDownImage, heroDardSwordLeftImage, heroDardSwordRightImage,
+	heroDardShieldUpImage, heroDardShieldDownImage, heroDardShieldLeftImage, heroDardShieldRightImage,
+	heroSwordShieldDardUpImage, heroSwordShieldDardDownImage, heroSwordShieldDardLeftImage, heroSwordShieldDardRightImage;
+	
+	private ImageIcon wall, hero, grass1, dragon, transparent, sword, shield, dard, ground, Exit, heroUp, heroDown, heroLeft, heroRight,
+	heroSwordUp, heroSwordDown, heroSwordLeft, heroSwordRight,
+	heroShieldUp, heroShieldDown, heroShieldLeft, heroShieldRight,
+	heroDardUp, heroDardDown, heroDardLeft, heroDardRight,
+	heroSwordShieldUp, heroSwordShieldDown, heroSwordShieldLeft, heroSwordShieldRight,
+	heroUpDardSword, heroDardSwordDown, heroDardSwordLeft, heroDardSwordRight,
+	heroDardShieldUp, heroDardShieldDown, heroDardShieldLeft, heroDardShieldRight,
+	heroSwordShieldDardUp, heroSwordShieldDardDown, heroSwordShieldDardLeft, heroSwordShieldDardRight;
 
 	private JDialog chooseSize;
 	private JFrame createMaze;
 	private JPanel tablePanel,optionsPanel;
 	private JButton chooseExit, chooseHero, chooseSword, chooseShield, chooseDragons, chooseDards,chooseWalls, chooseBlank, backButton, nextButton, cancel, saveNewMaze;
-	private ImageIcon wallImageNew, heroImageNew, grass1ImageNew, dragonImageNew, transparentImageNew, swordImageNew, shieldImageNew, dardImageNew;
+	private ImageIcon wallImageNew, heroImageNew, grass1ImageNew, dragonImageNew, transparentImageNew, swordImageNew, shieldImageNew, dardImageNew, groundImageNew, ExitImageNew,
+	heroUpImageNew, heroDownImageNew, heroLeftImageNew, heroRightImageNew;
 	private JLabel numDragons, numDards, info, chooseNewSizeLabel;
 	private JSlider sizeSliderNew;
 	private JRadioButton one2,two2,three2;
@@ -94,7 +112,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	private boolean heroValid, swordValid, shieldValid, exitValid, valid;
 	private int exitx, exity;
 	private boolean heroExists, exitExists;
-
+	private int direction; //1- up, 2- down, 3- left, 4- right
 	private JFileChooser fileChooser;
 	private String filePath;
 
@@ -106,12 +124,54 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		filePath = "";
 		wall = new ImageIcon("resources/wall.png");
 		grass1 = new ImageIcon("resources/grass1.png");
-		hero = new ImageIcon("resources/sanic.png");
+		hero = new ImageIcon("resources/heroDown.png");
 		dragon = new ImageIcon("resources/illuminati.png");
-		transparent = new ImageIcon("resources/transparent.png");
+		transparent = new ImageIcon("resources/ground.png");
 		sword = new ImageIcon("resources/sword.png");
 		shield = new ImageIcon("resources/shield.png");
 		dard = new ImageIcon("resources/dard.png");
+		ground = new ImageIcon("resources/ground.png");
+		Exit = new ImageIcon("resources/exit.png");
+		heroUp = new ImageIcon("resources/heroUp.png");
+		heroDown = new ImageIcon("resources/heroDown.png");
+		heroLeft = new ImageIcon("resources/heroLeft.png");
+		heroRight = new ImageIcon("resources/heroRight.png");
+		
+		heroSwordUp = new ImageIcon("resources/heroSwordUp.png");
+		heroSwordDown = new ImageIcon("resources/heroSwordDown.png"); 
+		heroSwordLeft = new ImageIcon("resources/heroSwordLeft.png");
+		heroSwordRight = new ImageIcon("resources/heroSwordRight.png");
+
+		heroShieldUp = new ImageIcon("resources/heroShieldUp.png");
+		heroShieldDown = new ImageIcon("resources/heroShieldDown.png");
+		heroShieldLeft = new ImageIcon("resources/heroShieldLeft.png");
+		heroShieldRight = new ImageIcon("resources/heroShieldRight.png");
+
+		heroDardUp = new ImageIcon("resources/heroDardUp.png");
+		heroDardDown = new ImageIcon("resources/heroDardDown.png");
+		heroDardLeft = new ImageIcon("resources/heroDardLeft.png");
+		heroDardRight = new ImageIcon("resources/heroDardRight.png");
+
+		heroSwordShieldUp = new ImageIcon("resources/heroSwordShieldUp.png");
+		heroSwordShieldDown = new ImageIcon("resources/heroSwordShieldDown.png");
+		heroSwordShieldLeft = new ImageIcon("resources/heroSwordShieldLeft.png");
+		heroSwordShieldRight = new ImageIcon("resources/heroSwordShieldRight.png");
+
+		heroUpDardSword = new ImageIcon("resources/heroUpDardSword.png");
+		heroDardSwordDown = new ImageIcon("resources/heroDardSwordDown.png");
+		heroDardSwordLeft = new ImageIcon("resources/heroDardSwordLeft.png");
+		heroDardSwordRight = new ImageIcon("resources/heroDardSwordRight.png");
+
+		heroDardShieldUp = new ImageIcon("resources/heroDardShieldUp.png");
+		heroDardShieldDown = new ImageIcon("resources/heroDardShieldDown.png");
+		heroDardShieldLeft = new ImageIcon("resources/heroDardShieldLeft.png");
+		heroDardShieldRight = new ImageIcon("resources/heroDardShieldRight.png");
+
+		heroSwordShieldDardUp = new ImageIcon("resources/heroSwordShieldDardUp.png");
+		heroSwordShieldDardDown = new ImageIcon("resources/heroSwordShieldDardDown.png");
+		heroSwordShieldDardLeft = new ImageIcon("resources/heroSwordShieldDardLeft.png");
+		heroSwordShieldDardRight = new ImageIcon("resources/heroSwordShieldDardRight.png");
+		
 		wallImage = new ImageIcon();
 		grass1Image = new ImageIcon();
 		heroImage = new ImageIcon();
@@ -119,6 +179,47 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		swordImage = new ImageIcon();
 		shieldImage = new ImageIcon();
 		dardImage = new ImageIcon();
+		groundImage = new ImageIcon();
+		ExitImage = new ImageIcon();
+		heroUpImage = new ImageIcon();
+		heroDownImage = new ImageIcon();
+		heroLeftImage = new ImageIcon();
+		heroRightImage = new ImageIcon();
+		
+		heroSwordUpImage = new ImageIcon();
+		heroSwordDownImage = new ImageIcon(); 
+		heroSwordLeftImage = new ImageIcon();
+		heroSwordRightImage = new ImageIcon();
+
+		heroShieldUpImage = new ImageIcon();
+		heroShieldDownImage = new ImageIcon();
+		heroShieldLeftImage = new ImageIcon();
+		heroShieldRightImage = new ImageIcon();
+
+		heroDardUpImage = new ImageIcon();
+		heroDardDownImage = new ImageIcon();
+		heroDardLeftImage = new ImageIcon();
+		heroDardRightImage = new ImageIcon();
+
+		heroSwordShieldUpImage = new ImageIcon();
+		heroSwordShieldDownImage = new ImageIcon();
+		heroSwordShieldLeftImage = new ImageIcon();
+		heroSwordShieldRightImage = new ImageIcon();
+
+		heroUpDardSwordImage = new ImageIcon();
+		heroDardSwordDownImage = new ImageIcon();
+		heroDardSwordLeftImage = new ImageIcon();
+		heroDardSwordRightImage = new ImageIcon();
+
+		heroDardShieldUpImage = new ImageIcon();
+		heroDardShieldDownImage = new ImageIcon();
+		heroDardShieldLeftImage = new ImageIcon();
+		heroDardShieldRightImage = new ImageIcon();
+
+		heroSwordShieldDardUpImage = new ImageIcon();
+		heroSwordShieldDardDownImage = new ImageIcon();
+		heroSwordShieldDardLeftImage = new ImageIcon();
+		heroSwordShieldDardRightImage = new ImageIcon();
 
 		nextSize = game.getSIZE();
 		nextNumOfDragons = game.getNumDragons();
@@ -136,7 +237,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		updateImagesSize();
 	}
 
-
+	
 	//Create fuctions
 	public void createMazeTable(){
 		wallImageNew = new ImageIcon();
@@ -147,6 +248,13 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		swordImageNew = new ImageIcon();
 		shieldImageNew = new ImageIcon();
 		dardImageNew = new ImageIcon();
+		groundImageNew = new ImageIcon();
+		ExitImageNew = new ImageIcon();
+		heroUpImageNew = new ImageIcon();
+		heroDownImageNew = new ImageIcon();
+		heroLeftImageNew = new ImageIcon();
+		heroRightImageNew = new ImageIcon();
+		
 		JPanel general = new JPanel();
 		JPanel general2 = new JPanel();
 		createMaze = new JFrame();
@@ -268,7 +376,13 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		swordImageNew.setImage(sword.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
 		shieldImageNew.setImage(shield.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
 		dardImageNew.setImage(dard.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
-
+		groundImageNew.setImage(ground.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		ExitImageNew.setImage(Exit.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		heroUpImageNew.setImage(heroUp.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		heroDownImageNew.setImage(heroDown.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		heroLeftImageNew.setImage(heroLeft.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		heroRightImageNew.setImage(heroRight.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
+		
 		tablePanel.setLayout(new GridLayout(sizeOfNew,sizeOfNew));
 
 		heroValid = true;
@@ -297,6 +411,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	}
 
 	public void createGameFrame(){
+		heroImage = heroDownImage;
 		generalPanel = new JPanel();
 		frame = new JFrame("D&D");
 		exit = new JButton("Exit to MainMenu");
@@ -650,8 +765,132 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 				JLabel l = new JLabel();
 				if(c[y][x] == 'X')
 					l.setIcon(wallImage);
+				else if(c[y][x] == ' ')
+					l.setIcon(groundImage);
+				else if(c[y][x] == 'S')
+					l.setIcon(ExitImage);
 				else if(c[y][x] == 'H')
 					l.setIcon(heroImage);
+				
+				else if(c[y][x] == Hero.armedSymbol){
+					switch(direction){
+					case 1: 
+						l.setIcon(heroSwordUpImage);
+						break;
+					case 2:
+						l.setIcon(heroSwordDownImage);
+						break;
+					case 3:
+						l.setIcon(heroSwordLeftImage);
+						break;
+					case 4:
+						l.setIcon(heroSwordRightImage);
+						break;
+					}
+				}
+				
+				else if(c[y][x] == Hero.heroShield){
+					switch(direction){
+					case 1:
+						l.setIcon(heroShieldUpImage);
+						break;
+					case 2:
+						l.setIcon(heroShieldDownImage);
+						break;
+					case 3:
+						l.setIcon(heroShieldLeftImage);
+						break;
+					case 4:
+						l.setIcon(heroShieldRightImage);
+						break;
+					}
+				}
+				
+				else if(c[y][x] == Hero.heroDard){
+					switch(direction){
+					case 1:
+						l.setIcon(heroDardUpImage);
+						break;
+					case 2:
+						l.setIcon(heroDardDownImage);
+						break;
+					case 3:
+						l.setIcon(heroDardLeftImage);
+						break;
+					case 4:
+						l.setIcon(heroDardRightImage);
+						break;
+					}
+				}
+				
+				else if(c[y][x] == Hero.heroSwordAndShield){
+					switch(direction){
+					case 1: 
+						l.setIcon(heroSwordShieldUpImage);
+						break;
+					case 2:
+						l.setIcon(heroSwordShieldDownImage);
+						break;
+					case 3:
+						l.setIcon(heroSwordShieldLeftImage);
+						break;
+					case 4:
+						l.setIcon(heroSwordShieldRightImage);
+						break;
+					}
+				}
+				
+				else if(c[y][x] == Hero.heroDardAndSword){
+					switch(direction){
+					case 1: 
+						l.setIcon(heroUpDardSwordImage);
+						break;
+					case 2:
+						l.setIcon(heroDardSwordDownImage);
+						break;
+					case 3:
+						l.setIcon(heroDardSwordLeftImage);
+						break;
+					case 4:
+						l.setIcon(heroDardSwordRightImage);
+						break;
+					}
+				}
+				
+				else if(c[y][x] == Hero.heroDardAndShield){
+					switch(direction){
+					case 1:
+						l.setIcon(heroDardShieldUpImage);
+						break;
+					case 2:
+						l.setIcon(heroDardShieldDownImage);
+						break;
+					case 3:
+						l.setIcon(heroDardShieldLeftImage);
+						break;
+					case 4:
+						l.setIcon(heroDardShieldRightImage);
+						break;
+					}
+				}
+				
+				else if(c[y][x] == Hero.heroDardAndShieldAndSword){
+					switch(direction){
+					case 1:
+						l.setIcon(heroSwordShieldDardUpImage);
+						break;
+					case 2:
+						l.setIcon(heroSwordShieldDardDownImage);
+						break;
+					case 3:
+						l.setIcon(heroSwordShieldDardLeftImage);
+						break;
+					case 4:
+						l.setIcon(heroSwordShieldDardRightImage);
+						break;
+					}
+				}
+				
 				else if(c[y][x] == 'E')
 					l.setIcon(swordImage);
 				else if(c[y][x] == 'O')
@@ -675,6 +914,47 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		swordImage.setImage(sword.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 		shieldImage.setImage(shield.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 		dardImage.setImage(dard.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		groundImage.setImage(ground.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		ExitImage.setImage(Exit.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroUpImage.setImage(heroUp.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroDownImage.setImage(heroDown.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroLeftImage.setImage(heroLeft.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroRightImage.setImage(heroRight.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		
+		heroSwordUpImage.setImage(heroSwordUp.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroSwordDownImage.setImage(heroSwordDown.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST)); 
+		heroSwordLeftImage.setImage(heroSwordLeft.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroSwordRightImage.setImage(heroSwordRight.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+
+		heroShieldUpImage.setImage(heroShieldUp.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroShieldDownImage.setImage(heroShieldDown.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroShieldLeftImage.setImage(heroShieldLeft.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroShieldRightImage.setImage(heroShieldRight.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+
+		heroDardUpImage.setImage(heroDardUp.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroDardDownImage.setImage(heroDardDown.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroDardLeftImage.setImage(heroDardLeft.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroDardRightImage.setImage(heroDardRight.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+
+		heroSwordShieldUpImage.setImage(heroSwordShieldUp.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroSwordShieldDownImage.setImage(heroSwordShieldDown.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroSwordShieldLeftImage.setImage(heroSwordShieldLeft.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroSwordShieldRightImage.setImage(heroSwordShieldRight.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+
+		heroUpDardSwordImage.setImage(heroUpDardSword.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroDardSwordDownImage.setImage(heroDardSwordDown.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroDardSwordLeftImage.setImage(heroDardSwordLeft.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroDardSwordRightImage.setImage(heroDardSwordRight.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+
+		heroDardShieldUpImage.setImage(heroDardShieldUp.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroDardShieldDownImage.setImage(heroDardShieldDown.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroDardShieldLeftImage.setImage(heroDardShieldLeft.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroDardShieldRightImage.setImage(heroDardShieldRight.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+
+		heroSwordShieldDardUpImage.setImage(heroSwordShieldDardUp.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroSwordShieldDardDownImage.setImage(heroSwordShieldDardDown.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroSwordShieldDardLeftImage.setImage(heroSwordShieldDardLeft.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
+		heroSwordShieldDardRightImage.setImage(heroSwordShieldDardRight.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 	}
 
 
@@ -723,7 +1003,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		}
 		else if(e.getSource() == chooseBlank){
 			valid = true;
-			currentImage = transparentImageNew;
+			currentImage = groundImageNew;
 			currentChar = ' ';
 		}
 		else if(e.getSource() == chooseDragons){
@@ -762,7 +1042,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			if(sizeOfNew % 2 == 0){
 				sizeOfNew = sizeOfNew - 1;
 			}
-			currentImage = transparentImageNew;
+			currentImage = groundImageNew;
 			currentChar = ' ';
 			updateImagesSize();
 			createNewMaze();
@@ -1004,15 +1284,23 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		char c = e.getKeyChar();
 		if(c == up){
 			game.play("w");
+			heroImage = heroUpImage;
+			direction = 1;
 		}
 		else if(c == down){
 			game.play("s");
+			heroImage = heroDownImage;
+			direction = 2;
 		}
 		else if(c == right){
 			game.play("d");
+			heroImage = heroRightImage;
+			direction = 4;
 		}
 		else if(c == left){
 			game.play("a");
+			heroImage = heroLeftImage;
+			direction = 3;
 		}
 		else if(c == 'f'){
 			game.play("f");
@@ -1132,7 +1420,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 						labelArray[exity][exitx].setIcon(wallImageNew);
 						newMaze[exity][exitx] = 'X';
 						}
-						labelArray[y][x].setIcon(currentImage);
+						labelArray[y][x].setIcon(ExitImageNew);
 						newMaze[y][x] = 'S';
 						exitx = x;
 						exity = y;

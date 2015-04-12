@@ -1,12 +1,12 @@
 package test;
 
 import static org.junit.Assert.*;
-
-
 import logic.Dragon;
 import logic.GameState;
 import logic.Hero;
 import logic.Maze;
+import logic.Point;
+import logic.Sword;
 
 import org.junit.Test;
 public class TestLabirinto {
@@ -156,7 +156,6 @@ public class TestLabirinto {
 	@Test
 	public void testNaoTermina()
 	{
-		
 		Maze m1;
 		Hero h1;
 		Dragon d1;
@@ -194,23 +193,7 @@ public class TestLabirinto {
 		assertEquals('D',e.getMaze().getLab()[5][2]);
 	}
 
-	//////////////////////////////////////////////////////////
-	@Test 
-	public void testDragaoDormir()
-	{
-		GameState e = new GameState();
-		Dragon d = new Dragon('D',true,false);
-		Hero h = new Hero('H',true,false);
-		e.setHero(h);
-		e.setDragao(d);
-		
-	}
-	
-	@Test 
-	public void testMultiplosDragoes()
-	{
-		
-	}
+
 	@Test 
 	public void testCuspirFogo()
 	{
@@ -303,6 +286,8 @@ public class TestLabirinto {
 	{
 		GameState e = new GameState();
 		e.initialize(11);
+		assertEquals(0,e.getElements().size());
+		assertEquals(0,e.getElements().size());
 		Dragon d = new Dragon('D', true,false);
 		e.setDragao(d);
 		e.getDragao().generate(e.getMaze(), 11);
@@ -316,6 +301,7 @@ public class TestLabirinto {
 			}
 		}
 		assertEquals(true,test);
+		
 		
 	}
 	@Test 
@@ -367,6 +353,7 @@ public class TestLabirinto {
 		GameState j1=new GameState();
 		j1.iniciar();
 		Hero h=j1.getHero();
+		Dragon d=j1.getDragao();
 		j1.play("d");
 		assertEquals(true,h.getState());
 		h.incDards();
@@ -374,4 +361,190 @@ public class TestLabirinto {
 		j1.play("f");
 		assertEquals(0,h.getDardNumber());
 	}
+	@Test 
+	public void testAddElements()
+	{
+		GameState e=new GameState();
+		assertEquals(false,e.getState());
+		e.initialize();
+		assertEquals(true,e.getState());
+		e.setNumOfDragons(3);
+		assertEquals(3,e.getNumDragons());
+		e.addElements();
+		assertEquals(10,e.getSIZE());
+		Maze m=e.getMaze();
+		boolean hero=false;
+		boolean dragon=false;
+		boolean shield=false;
+		boolean dard=false;
+		boolean sword=false;
+		for(int i = 0; i < m.getLab().length; i++)
+		{
+			for(int j = 0; j < m.getLab().length; j++)
+			{
+				if(m.getLab()[i][j] == 'H')
+				{
+					hero = true;
+				}
+				if(m.getLab()[i][j] == 'D')
+				{
+					dragon=true;
+				}
+				if(m.getLab()[i][j] == 'O')
+				{
+					shield=true;
+				}
+				if(m.getLab()[i][j] == '/')
+				{
+					dard=true;
+				}
+				if(m.getLab()[i][j] == 'E')
+				{
+					sword=true;
+				}
+			}
+		}
+		assertEquals(true,hero);
+		assertEquals(true,dragon);
+		assertEquals(true,shield);
+		assertEquals(true,dard);
+		assertEquals(true,sword);
+	}
+	@Test 
+	public void testKillDragonDard()
+	{
+		Maze m1;
+		Hero h1;
+		GameState j1=new GameState();
+		j1.iniciar();
+		m1=j1.getMaze();
+		h1=j1.getHero();
+		h1.incDards();
+		j1.shootDard();
+		assertEquals(' ',m1.getLab()[3][1]);
+		h1.setPosition(1, 6);
+		h1.incDards();
+		j1.shootDard();
+		assertEquals(' ',m1.getLab()[3][1]);
+	}
+	@Test
+	public void testCollisionDragonWest()
+	{
+		GameState j1=new GameState();
+		j1.initialize();
+		Point p1=new Point (1,1);
+		Point p2=new Point (3,1);
+		Hero h = new Hero('H',true,false);	
+		h.setPosition(1, 1);
+		h.setWeaponSymbol('E');
+		j1.getMaze().setSymbol(p1, h.getSymbol());
+		j1.setHero(h);
+		Dragon d = new Dragon('D',true,false);
+		d.setPosition(3, 1);
+		j1.setDragao(d);
+		j1.getMaze().setSymbol(p2, d.getSymbol());
+		j1.moveHero('d');
+		assertEquals(2,h.getPonto().getXpos());
+		j1.checkCollisionWithDragon();
+		assertEquals('A',h.getSymbol());
+		assertEquals(3,d.getPonto().getXpos());
+		assertEquals(false,d.getState());
+	}
+	@Test
+	public void testCollisionDragonEst()
+	{
+		GameState j1=new GameState();
+		j1.initialize();
+		Point p1=new Point (1,1);
+		Point p2=new Point (3,1);
+		Hero h = new Hero('H',true,false);	
+		h.setPosition(3, 1);
+		h.setWeaponSymbol('E');
+		j1.setHero(h);
+		Dragon d = new Dragon('D',true,false);
+		d.setPosition(1, 1);
+		j1.setDragao(d);
+		j1.getMaze().setSymbol(p2, h.getSymbol());
+		j1.getMaze().setSymbol(p1, d.getSymbol());
+		j1.moveHero('a');
+		assertEquals(2,h.getPonto().getXpos());
+		j1.checkCollisionWithDragon();
+		assertEquals('A',h.getSymbol());
+		assertEquals(1,d.getPonto().getXpos());
+		assertEquals(false,d.getState());
+	}
+	@Test
+	public void testCollisionDragonSouth()
+	{
+		GameState j1=new GameState();
+		j1.initialize();
+		Point p1=new Point (1,1);
+		Point p2=new Point (1,3);
+		Hero h = new Hero('H',true,false);	
+		h.setPosition(1, 1);
+		h.setWeaponSymbol('E');
+		j1.setHero(h);
+		Dragon d = new Dragon('D',true,false);
+		d.setPosition(1, 3);
+		j1.setDragao(d);
+		j1.getMaze().setSymbol(p1, h.getSymbol());
+		j1.getMaze().setSymbol(p2, d.getSymbol());
+		j1.moveHero('s');
+		assertEquals(2,h.getPonto().getYpos());
+		j1.checkCollisionWithDragon();
+		assertEquals('A',h.getSymbol());
+		assertEquals(3,d.getPonto().getYpos());
+		assertEquals(false,d.getState());
+		
+	}
+	@Test
+	public void testDragonSleep()
+	{
+		GameState g=new GameState();
+		g.initialize();
+		Dragon d = new Dragon('D',true,false);
+		d.setPosition(1, 1);
+		assertEquals(true,d.getActive());
+		assertEquals('D',d.getSymbol());
+		do
+		{
+			d.incCounter();
+		}while(d.getActive());
+		assertEquals(false,d.getActive());
+		assertEquals('d',d.getSymbol());
+		Dragon d1 = new Dragon('d',true,false);
+		d1.setPosition(1, 4);
+		d1.setActive(false);
+		do
+		{
+			d1.incCounter();
+		}while(!d1.getActive());
+		assertEquals(true,d1.getActive());
+		assertEquals('D',d1.getSymbol());
+	}
+	@Test
+	public void testRestart()
+	{
+		GameState g=new GameState();
+		g.initialize(11);
+		assertEquals(11,g.getSIZE());
+		g.setSIZE(13);
+		g.restartGame();
+		assertEquals(13,g.getSIZE());
+		assertEquals(false,g.getPreset());
+	}
+	/*@Test 
+	public void testRemoveElements()
+	{
+		GameState e=new GameState();
+		e.initialize();
+		//e.setNumOfDragons(2);
+		assertEquals(2,e.getNumDragons());
+		e.addElements();
+		assertEquals(10,e.getSIZE());
+		Maze m=e.getMaze();
+		assertEquals(3,e.getElements().size());
+		e.removeElement("Espada", e.getEspada().getPonto().getXpos(),e.getEspada().getPonto().getYpos());
+		assertEquals(2,e.getElements().size());
+	}*/
 }

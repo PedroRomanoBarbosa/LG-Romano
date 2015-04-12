@@ -66,6 +66,16 @@ public class Dragon extends Element{
 		this.state = state;
 	}
 	/**
+	 * Sets active of the dragon.
+	 * @param active active of dragon<br>
+	 * 					   true - awakened<br>
+	 *        			   false - asleep
+	 * 
+	 */
+	public void setActive(boolean active){
+		this.active=active;
+	}
+	/**
 	 * Returns the position of the dragon relative to the sword.
 	 * @return true - on top of sword<br>
 	 * 		   false - not on top of sword
@@ -122,8 +132,7 @@ public class Dragon extends Element{
 						if(counter == pos){
 							maze[y][x] = this.symbol;
 							this.symbolBelow = ' ';
-							this.point.setXpos(x);
-							this.point.setYpos(y);
+							this.setPosition(x, y);
 							break;
 						}
 					}

@@ -133,8 +133,7 @@ public class Element implements Serializable{
 					counter++;
 					if(counter == pos){
 						maze[y][x] = symbol;
-						this.point.setXpos(x);
-						this.point.setYpos(y);
+						this.setPosition(x, y);
 					}
 				}
 
