@@ -15,8 +15,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,8 +22,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
-
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -37,13 +33,11 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -75,7 +69,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	private JRadioButton one,two,three;
 	private JCheckBox presetCheck;
 	private ButtonGroup group;
-	private JPanel buttonPanel, layer1, layer2;
+	private JPanel buttonPanel;
 	private int chooseKeyMode;
 	private ImageIcon wallImage, heroImage, grass1Image, dragonImage, dragonSleepImage, swordImage, shieldImage, dardImage, groundImage, ExitImage, 
 	heroUpImage, heroDownImage, heroLeftImage, heroRightImage,

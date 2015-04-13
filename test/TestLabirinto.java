@@ -6,7 +6,6 @@ import logic.GameState;
 import logic.Hero;
 import logic.Maze;
 import logic.Point;
-import logic.Sword;
 
 import org.junit.Test;
 public class TestLabirinto {

@@ -1,14 +1,7 @@
 package cli;
 
-import gui.Gui;
 import gui.GameFrame;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
 import logic.GameState;
@@ -20,7 +13,7 @@ public class Interface{
 	static int dif;
 	static String input;
 	static GameState game;
-	static Gui gui;
+	static GameFrame gui;
 	static boolean state;
 	static int perspective;
 
@@ -45,7 +38,7 @@ public class Interface{
 		chooseGamePerspective();
 		printGame();
 		if(perspective == 2)
-			gui = new Gui(game);
+			gui = new GameFrame(game);
 		/* Main cycle */
 		chooseActionAndPlay();
 		System.out.println("game finished!");
@@ -94,8 +87,6 @@ public class Interface{
 			}while( !(input.equalsIgnoreCase("w") || input.equalsIgnoreCase("a") || input.equalsIgnoreCase("s") || input.equalsIgnoreCase("d") || input.equalsIgnoreCase("f")));
 			state = game.play(input);
 			printGame();
-			if(perspective == 2)
-				gui.getGameFrame().play();
 		}while(state == true);
 	}
 
