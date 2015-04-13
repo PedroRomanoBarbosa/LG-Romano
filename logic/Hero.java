@@ -1,10 +1,16 @@
 package logic;
 
-
+/**
+ * This class represents the hero object
+ * 
+ * 
+ * @author PedroBarbosa
+ *
+ */
 public class Hero extends Element{
 
-	private boolean state; //true- alive, false- dead
-	private boolean weapon; //true- armado, false- desarmado
+	private boolean state;
+	private boolean weapon;
 	private int numDardos=0;
 	private boolean hasShield;
 	public static char heroDisarmedSymbol = 'H';
@@ -16,6 +22,13 @@ public class Hero extends Element{
 	public static char heroSwordAndShield = 'P';
 	public static char heroDardAndShieldAndSword = '#';
 
+	/**
+	 * Hero constructor. Constructs the hero object<br>
+	 * with it's symbol, state and weapon state.
+	 * @param sym symbol of the hero
+	 * @param state state of the hero. True- alive, false- dead
+	 * @param weapon weapon state. True- armed. false- unarmed
+	 */
 	public Hero (char sym, boolean state, boolean weapon)
 	{
 		super(sym);
@@ -26,15 +39,24 @@ public class Hero extends Element{
 		this.hasShield = false;
 		this.symbolBelow = ' ';
 	}
-
+	/**
+	 * Returns the state of the hero.
+	 * @return state of the hero
+	 */
 	public boolean getState() {
 		return state;
 	}
-
+	/**
+	 * Sets the state of the hero.
+	 * @param state of the hero
+	 */
 	public void setState(boolean state) {
 		this.state = state;
 	}
-
+	/**
+	 * Sets the weapon symbol.
+	 * @param sym symbol of the weapon.
+	 */
 	public void setWeaponSymbol(char sym){
 		switch(sym){
 		case 'E':
@@ -79,15 +101,23 @@ public class Hero extends Element{
 			break;
 		}
 	}
-
+	/**
+	 * Returns the weapon state.
+	 * @return weapon state
+	 */
 	public boolean getWeapon() {
 		return weapon;
 	}
-
+	/**
+	 * Sets the weapon state
+	 * @param weapon state
+	 */
 	public void setWeapon(boolean weapon) {
 		this.weapon = weapon;
 	}
-
+	/**
+	 * Consumes a dard of the hero.
+	 */
 	public void consumeDard(){
 		numDardos--;
 		if(numDardos == 0){
@@ -101,15 +131,24 @@ public class Hero extends Element{
 				symbol = heroSwordAndShield;	
 		}
 	}
-
+	/**
+	 * Returns dard number.
+	 * @return dard number
+	 */
 	public int getDardNumber(){
 		return numDardos;
 	}
-
+	/**
+	 * Increments dard counter in the hero.
+	 */
 	public void incDards(){
 		numDardos++;
 	}
-
+	/**
+	 * Checks if the hero has a shield or not.
+	 * @return true- has shield<br>
+	 * 		   false- doesn't have shield	
+	 */
 	public boolean hasShield(){
 		return this.hasShield;
 	}

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -39,6 +40,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -1469,6 +1471,25 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			nextNumOfDragons2 = numDragonsSlider.getValue();
 		}
 		else if(e.getSource() == instructionsButton){
+			JDialog d = new JDialog(frame,"Instructions");
+			JPanel p = new JPanel();
+			JLabel l = new JLabel("<html> <center> WELCOME TO THE MAZE </center><br>"
+					                   + "Use the WASD keys to move and press 'f' to shoot dards <br>"
+								       + "(you can change the movement keys in the settings panel). <br>"
+								       + "Your objective is to leave the maze. To do this you have <br>"
+								       + "to get a sword that is scattered around. <br>"
+								       + "Stay away from the enemies! They have a killing range! <br>"
+								       + "Pick the shield and dards to help you in your journey. <br><br>"
+								       + "<center> GOOD LUCK! </center> </html>");
+			p.add(l);
+			p.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+			d.setBackground(new Color(255,202,134) );
+			d.add(p);
+			d.setModal(true);
+			d.setLocationRelativeTo(null);
+			d.setResizable(false);
+			d.pack();
+			d.setVisible(true);
 		}
 	}
 

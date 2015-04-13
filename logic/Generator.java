@@ -3,6 +3,12 @@ package logic;
 import java.util.Random;
 import java.util.Stack;
 
+/**
+ * Generator of random mazes.In the form of char[][].
+ * 
+ * @author PedroBarbosa
+ *
+ */
 public class Generator {
 	private Stack<int[]> backtrack = new Stack<int[]>();
 	private char[][] visitedCells;
@@ -10,24 +16,42 @@ public class Generator {
 	private int SIZE;
 	private Point exit;
 
+	/**
+	 * Generator constructor with size.<br>
+	 * Constructs a generator with a given size.
+	 * @param size size of the maze
+	 */
 	public Generator(int size){
 		exit = new Point();
 		this.SIZE = size;
 	}
-
+	/**
+	 * Simple preset generator.<br>
+	 * Constructs a preset generator with thw size of 10.
+	 */
 	public Generator(){
 		exit = new Point();
 		this.SIZE = 10;
 	}
-
+	/**
+	 * Returns size of the maze.
+	 * @return size of the maze
+	 */
 	public int getSIZE() {
 		return SIZE;
 	}
-
+	/**
+	 * Sets the size of the maze in the generator.
+	 * @param size of the maze
+	 */
 	public void setSIZE(int size) {
 		SIZE = size;
 	}
-
+	/**
+	 * Generates a random maze with a backtrack algorithm.<br>
+	 * It only works with odd numbers.
+	 * @return maze array
+	 */
 	public char[][] generateLabirinth(){
 		visitedCellSIZE = (SIZE-1)/2;
 
@@ -255,7 +279,10 @@ public class Generator {
 		}
 		return temp;
 	}
-
+	/**
+	 * Generates a preset maze with the size of 10.
+	 * @return maze array
+	 */
 	public char[][] generateLabirinthPreset(){
 		char[][] temp = {{'X','X','X','X','X','X','X','X','X','X'},
 				 {'X',' ',' ',' ',' ',' ',' ',' ',' ','X'},
@@ -271,7 +298,10 @@ public class Generator {
 		exit.setYpos(5);
 		return temp;
 	}
-	
+	/**
+	 * Returns the exit in the form of a point object.
+	 * @return exit point
+	 */
 	public Point getExit(){
 		return exit;
 	}

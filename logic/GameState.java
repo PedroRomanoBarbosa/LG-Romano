@@ -6,7 +6,8 @@ import java.util.Random;
 
 /**
  * This class handles all the logic from the game 
- * and uses all the other logic classes.
+ * and uses all the other logic classes(point, <br>
+ * elements maze and generator
  * 
  * @author PedroBarbosa
  *

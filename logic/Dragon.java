@@ -93,7 +93,11 @@ public class Dragon extends Element{
 		this.espadaDragao = espadaDragao;
 	}
 	/**
+	 * Counts the valid blank spaces in the maze for this dragon.
+	 * @param maze array of the maze
+	 * @param size size of the maze
 	 * 
+	 * @return number of valid blank spaces
 	 */
 	public int countBlankSpace(char[][] maze, int size){
 		int counter = 0;
@@ -121,7 +125,12 @@ public class Dragon extends Element{
 		}
 		return counter-invalidCounter;
 	}
-
+	/**
+	 * Sets the coordinate for this dragon in a maze.
+	 * @param pos position of the element
+	 * @param maze array of the maze
+	 * @param size size of the maze
+	 */
 	public void setCoord(int pos,char[][] maze, int size){
 		int counter = 0;
 		for(int y = 0; y < size; y++){
@@ -142,6 +151,10 @@ public class Dragon extends Element{
 		}
 	}
 
+	/**
+	 * Returns the String object that represents this class. 
+	 * @return string representation
+	 */
 	public String toString(){
 		return "Dragon";
 	}

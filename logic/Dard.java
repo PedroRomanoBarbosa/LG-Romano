@@ -9,11 +9,17 @@ package logic;
  *
  */
 public class Dard extends Element{
-	
+	/**
+	 * Dard constructor.
+	 * @param symbol symbol of the dard
+	 */
 	public Dard(char symbol) {
 		super(symbol);
 	}
-	
+	/**
+	 * Returns string representation of this object.
+	 * @return String representation
+	 */
 	public String toString(){
 		return "Dard";
 	}
