@@ -58,7 +58,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	private char nextUp, nextDown, nextLeft, nextRight;
 	private JDialog settingsFrame;
 	private JPanel panel2;
-	private JLabel sizeLabel,numDragonsLabel, errorLabel;
+	private JLabel sizeLabel,numDragonsLabel, errorLabel, numDardsLabel;
 	private JButton exit, restart, saveGame, loadGame, backToMain, settings, acceptSettings, cancelSettings, upButton, downButton, leftButton, rightButton;
 	private JButton instructionsButton;
 	private JButton newGame, loadGameMain, exitGameMain, createLabirinth;
@@ -111,7 +111,6 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	private int direction; //1- up, 2- down, 3- left, 4- right
 	private JFileChooser fileChooser;
 	private String filePath;
-
 
 
 	//Constructor
@@ -431,12 +430,11 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		panel2 = new JPanel();
 		frame.addKeyListener(this);
 		frame.setResizable(false);
-		buttonLayout = new GridLayout(6,1);
+		buttonLayout = new GridLayout(7,1);
 		frameLayout = new BoxLayout(generalPanel,BoxLayout.X_AXIS);
 		mazeLayout = new GridLayout(game.getSIZE(),game.getSIZE());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		generalPanel.setLayout(frameLayout);
-
 		panel.setLayout(buttonLayout);
 		panel2.setLayout(mazeLayout);
 
@@ -449,6 +447,9 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		loadGame.addActionListener(this);
 		settings.addActionListener(this);
 		instructionsButton.addActionListener(this);
+		numDardsLabel = new JLabel("number of dards: " + game.getHero().getDardNumber());
+		numDardsLabel.setFont(new Font(numDardsLabel.getFont().getFontName(), Font.BOLD,20));
+		panel.add(numDardsLabel);
 		panel.add(saveGame);
 		panel.add(loadGame);
 		panel.add(restart);
@@ -849,6 +850,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			frame.setVisible(false);
 			mainMenu.setVisible(true);
 		}
+		numDardsLabel.setText("number of dards: " + game.getHero().getDardNumber());
 	}
 
 	public void updateLayer(){
