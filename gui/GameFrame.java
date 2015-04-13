@@ -481,7 +481,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		mainMenuPainel.setLayout(new BoxLayout(mainMenuPainel,BoxLayout.Y_AXIS));
 
 		JPanel titlePanel = new JPanel();
-		JLabel title = new JLabel("Dungeons & Dragons");
+		JLabel title = new JLabel("Mazes & Dragons");
 		title.setAlignmentX(JPanel.CENTER_ALIGNMENT);
 		title.setFont(new Font("Impact",1,50));
 		titlePanel.add(title);
