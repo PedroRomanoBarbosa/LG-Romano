@@ -1302,7 +1302,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			heroImage = heroLeftImage;
 			direction = 3;
 		}
-		else if(c == 'f'){
+		else if(c == 'f' || c == 'F'){
 			game.play("f");
 		}
 		Interface.printGame();

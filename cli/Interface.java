@@ -22,11 +22,12 @@ public class Interface{
 	static GameState game;
 	static Gui gui;
 	static boolean state;
+	static int perspective;
 
 	public static void main(String[] args) {
 		init();
 	}
-	
+
 	public static void init(){
 		game = new GameState();
 		chooseGameMode();
@@ -41,24 +42,33 @@ public class Interface{
 			game.initialize(size);
 		}
 		game.addElements();
+		chooseGamePerspective();
 		printGame();
-		gui = new Gui(game);
+		if(perspective == 2)
+			gui = new Gui(game);
 		/* Main cycle */
 		chooseActionAndPlay();
 		System.out.println("game finished!");
 	}
-	
+
+	public static void chooseGamePerspective(){
+		do{
+			System.out.println("Choose game prespective:\n1 - console\n2 - Graphical User Interface");
+			perspective = scan.nextInt();
+		}while(perspective != 1 && perspective != 2);
+	}
+
 	public static void chooseGameMode(){
 		do{
 			System.out.println("Choose game mode:\n1 - Premade map\n2 - Choose map size");
 			mode = scan.nextInt();
 		}while(mode != 1 && mode != 2);
 	}
-	
+
 	public static void chooseSaveFile(){
-		
+
 	}
-	
+
 	public static void chooseGameDifficulty(){
 		do{
 			System.out.println("Choose difficulty:\n1 - Immoble dragons\n2 - Roaming dragons\n3 - roaming + asleep dragons");
@@ -66,7 +76,7 @@ public class Interface{
 		}while(dif != 1 && dif != 2 && dif != 3);
 		game.setDifficulty(dif);
 	}
-	
+
 	public static void chooseGameSize(){
 		do{
 			System.out.println("Choose the size of the maze(only odd numbers)");
@@ -84,10 +94,11 @@ public class Interface{
 			}while( !(input.equalsIgnoreCase("w") || input.equalsIgnoreCase("a") || input.equalsIgnoreCase("s") || input.equalsIgnoreCase("d") || input.equalsIgnoreCase("f")));
 			state = game.play(input);
 			printGame();
-			gui.getGameFrame().play();
+			if(perspective == 2)
+				gui.getGameFrame().play();
 		}while(state == true);
 	}
-	
+
 	public static void printGame(){
 		for(int y = 0; y < game.getSIZE(); y++){
 			for(int x = 0; x < game.getSIZE(); x++){

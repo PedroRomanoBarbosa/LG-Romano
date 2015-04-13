@@ -29,14 +29,20 @@ public class GameState implements Serializable{
 	private int difficulty; 
 
 
-
 	/**
 	 * Simple constructor.
 	 */
 	public GameState(){
 		numDragons = 2;
 	}
-
+	/**
+	 * Creates a game with a pre-defined maze created by the user
+	 * @param maze pre-defined maze
+	 * @param dif game difficulty
+	 * @param size size of the maze
+	 * @param exitx exit's x-coord
+	 * @param exity exit's y-coord
+	 */
 	public GameState(char[][] maze, int dif, int size, int exitx, int exity){
 		SIZE = size;
 		difficulty = dif;
@@ -107,27 +113,41 @@ public class GameState implements Serializable{
 	public int getSIZE() {
 		return SIZE;
 	}
-
+	/**
+	 * Return number of dragons
+	 * @return number
+	 */
 	public int getNumDragons(){
 		return numDragons;
 	}
-
+	/**
+	 * Sets the number of dragons in the game
+	 * @param n number of dragons
+	 */
 	public void setNumOfDragons(int n){
 		numDragons = n;
 	}
-
+	/**
+	 * Set the size of the game board
+	 * @param s size 
+	 */
 	public void setSIZE(int s){
 		SIZE = s;
 	}
-
+	/**
+	 * Sets the game preset state
+	 * @param pre preset
+	 */
 	public void setPreset(boolean pre){
 		preset = pre;
 	}
-
+	/**
+	 * Returns the preset boolean
+	 * @return preset
+	 */
 	public boolean getPreset(){
 		return preset;
 	}
-
 	/**
 	 * Sets the hero for this gamestate.
 	 * @param h - hero
@@ -170,7 +190,10 @@ public class GameState implements Serializable{
 		SIZE = size;
 		preset = false;
 	}
-
+	/**
+	 * Returns the game's difficulty
+	 * @return difficulty
+	 */
 	public int getDifficulty() {
 		return difficulty;
 	}
@@ -630,7 +653,8 @@ public class GameState implements Serializable{
 			while(i < 3 && y > 0){
 				if(labirinto.getLab()[y][x] == 'X')
 					break;
-				if(labirinto.getLab()[y][x] == Dragon.activeSymbol  || labirinto.getLab()[y][x] == Dragon.swordDragon ){
+				if(labirinto.getLab()[y][x] == Dragon.activeSymbol  || labirinto.getLab()[y][x] == Dragon.sleepSymbol 
+						|| labirinto.getLab()[y][x] == Dragon.asleepSymbolInSword ||labirinto.getLab()[y][x] == Dragon.swordDragon ){
 					return true;
 				}
 				y--;
@@ -645,7 +669,8 @@ public class GameState implements Serializable{
 			while(i < 3 && y < labirinto.getSIZE()-1){
 				if(labirinto.getLab()[y][x] == 'X')
 					break;
-				if(labirinto.getLab()[y][x] == Dragon.activeSymbol  || labirinto.getLab()[y][x] == Dragon.swordDragon ){
+				if(labirinto.getLab()[y][x] == Dragon.activeSymbol  || labirinto.getLab()[y][x] == Dragon.sleepSymbol 
+						|| labirinto.getLab()[y][x] == Dragon.asleepSymbolInSword ||labirinto.getLab()[y][x] == Dragon.swordDragon ){
 					return true;
 				}
 				y++;
@@ -662,9 +687,7 @@ public class GameState implements Serializable{
 					break;
 				if(labirinto.getLab()[y][x] == Dragon.activeSymbol || labirinto.getLab()[y][x] == Dragon.sleepSymbol 
 						|| labirinto.getLab()[y][x] == Dragon.asleepSymbolInSword || labirinto.getLab()[y][x] == Dragon.swordDragon ){
-					labirinto.getLab()[y][x] = ' ';
-					this.removeElement("Dragao", x, y);
-					break;
+					return true;
 				}
 				x--;
 				i++;
@@ -678,7 +701,8 @@ public class GameState implements Serializable{
 			while(i < 3 && x < labirinto.getSIZE()-1){
 				if(labirinto.getLab()[y][x] == 'X')
 					break;
-				if(labirinto.getLab()[y][x] == Dragon.activeSymbol  || labirinto.getLab()[y][x] == Dragon.swordDragon ){
+				if(labirinto.getLab()[y][x] == Dragon.activeSymbol  || labirinto.getLab()[y][x] == Dragon.sleepSymbol 
+						|| labirinto.getLab()[y][x] == Dragon.asleepSymbolInSword || labirinto.getLab()[y][x] == Dragon.swordDragon ){
 					return true;
 				}
 				x++;
