@@ -80,7 +80,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 	heroDardSwordUpImage, heroDardSwordDownImage, heroDardSwordLeftImage, heroDardSwordRightImage,
 	heroDardShieldUpImage, heroDardShieldDownImage, heroDardShieldLeftImage, heroDardShieldRightImage,
 	heroSwordShieldDardUpImage, heroSwordShieldDardDownImage, heroSwordShieldDardLeftImage, heroSwordShieldDardRightImage;
-	
+
 	private ImageIcon wall, hero, grass1, dragon, dragonSleep, transparent, sword, shield, dard, ground, Exit, heroUp, heroDown, heroLeft, heroRight,
 	heroSwordUp, heroSwordDown, heroSwordLeft, heroSwordRight,
 	heroShieldUp, heroShieldDown, heroShieldLeft, heroShieldRight,
@@ -132,7 +132,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		heroDown = new ImageIcon("resources/heroDown.png");
 		heroLeft = new ImageIcon("resources/heroLeft.png");
 		heroRight = new ImageIcon("resources/heroRight.png");
-		
+
 		heroSwordUp = new ImageIcon("resources/heroSwordUp.png");
 		heroSwordDown = new ImageIcon("resources/heroSwordDown.png"); 
 		heroSwordLeft = new ImageIcon("resources/heroSwordLeft.png");
@@ -167,7 +167,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		heroSwordShieldDardDown = new ImageIcon("resources/heroSwordShieldDardDown.png");
 		heroSwordShieldDardLeft = new ImageIcon("resources/heroSwordShieldDardLeft.png");
 		heroSwordShieldDardRight = new ImageIcon("resources/heroSwordShieldDardRight.png");
-		
+
 		wallImage = new ImageIcon();
 		grass1Image = new ImageIcon();
 		heroImage = new ImageIcon();
@@ -182,7 +182,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		heroDownImage = new ImageIcon();
 		heroLeftImage = new ImageIcon();
 		heroRightImage = new ImageIcon();
-		
+
 		heroSwordUpImage = new ImageIcon();
 		heroSwordDownImage = new ImageIcon(); 
 		heroSwordLeftImage = new ImageIcon();
@@ -234,7 +234,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		updateImagesSize();
 	}
 
-	
+
 	//Create fuctions
 	public void createMazeTable(){
 		wallImageNew = new ImageIcon();
@@ -251,7 +251,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		heroDownImageNew = new ImageIcon();
 		heroLeftImageNew = new ImageIcon();
 		heroRightImageNew = new ImageIcon();
-		
+
 		JPanel general = new JPanel();
 		JPanel general2 = new JPanel();
 		createMaze = new JFrame();
@@ -379,7 +379,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		heroDownImageNew.setImage(heroDown.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
 		heroLeftImageNew.setImage(heroLeft.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
 		heroRightImageNew.setImage(heroRight.getImage().getScaledInstance(panelSize/sizeOfNew, panelSize/sizeOfNew, Image.SCALE_FAST));
-		
+
 		tablePanel.setLayout(new GridLayout(sizeOfNew,sizeOfNew));
 
 		heroValid = true;
@@ -538,13 +538,13 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			@Override
 			public void windowActivated(WindowEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowClosed(WindowEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
@@ -594,27 +594,27 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			@Override
 			public void windowDeactivated(WindowEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowDeiconified(WindowEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowIconified(WindowEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowOpened(WindowEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 		});
 		settingsFrame.addKeyListener(new KeyListener(){
 			@Override
@@ -682,7 +682,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		presetCheck.setFocusable(false);
 		checkPanel.add(presetCheck);
 		settingsPanel.add(checkPanel);
-		
+
 		JPanel sizePanel = new JPanel();
 		sizePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		sizeLabel = new JLabel("Size of the new maze: " + nextSize);
@@ -869,7 +869,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 					l.setIcon(ExitImage);
 				else if(c[y][x] == 'H')
 					l.setIcon(heroImage);
-				
+
 				else if(c[y][x] == Hero.armedSymbol){
 					switch(direction){
 					case 1: 
@@ -886,7 +886,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 						break;
 					}
 				}
-				
+
 				else if(c[y][x] == Hero.heroShield){
 					switch(direction){
 					case 1:
@@ -903,7 +903,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 						break;
 					}
 				}
-				
+
 				else if(c[y][x] == Hero.heroDard){
 					switch(direction){
 					case 1:
@@ -920,7 +920,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 						break;
 					}
 				}
-				
+
 				else if(c[y][x] == Hero.heroSwordAndShield){
 					switch(direction){
 					case 1: 
@@ -937,7 +937,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 						break;
 					}
 				}
-				
+
 				else if(c[y][x] == Hero.heroDardAndSword){
 					switch(direction){
 					case 1: 
@@ -954,7 +954,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 						break;
 					}
 				}
-				
+
 				else if(c[y][x] == Hero.heroDardAndShield){
 					switch(direction){
 					case 1:
@@ -971,7 +971,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 						break;
 					}
 				}
-				
+
 				else if(c[y][x] == Hero.heroDardAndShieldAndSword){
 					switch(direction){
 					case 1:
@@ -988,7 +988,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 						break;
 					}
 				}
-				
+
 				else if(c[y][x] == 'E')
 					l.setIcon(swordImage);
 				else if(c[y][x] == 'O')
@@ -1021,7 +1021,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 		heroDownImage.setImage(heroDown.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 		heroLeftImage.setImage(heroLeft.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 		heroRightImage.setImage(heroRight.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
-		
+
 		heroSwordUpImage.setImage(heroSwordUp.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
 		heroSwordDownImage.setImage(heroSwordDown.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST)); 
 		heroSwordLeftImage.setImage(heroSwordLeft.getImage().getScaledInstance(panelSize/game.getSIZE(), panelSize/game.getSIZE(), Image.SCALE_FAST));
@@ -1071,7 +1071,7 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 			sizeSlider.setEnabled(!presetCheck.isSelected());
 		}
 		else if(e.getSource() == saveNewMaze){
-			if(heroExists){
+			if(heroExists && exitExists){
 				int dif = 1;
 				if(two2.isSelected())
 					dif = 2;
@@ -1091,7 +1091,12 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 					JOptionPane.showMessageDialog(createMaze,"Your game was saved!",  "Save game", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}else{
-				JOptionPane.showMessageDialog(createMaze,"You don't have a hero assigned!",  "Save game", JOptionPane.INFORMATION_MESSAGE);
+				if(exitExists == false && heroExists == false)
+					JOptionPane.showMessageDialog(createMaze,"You don't have an exit and hero assigned!",  "Save game", JOptionPane.INFORMATION_MESSAGE);
+				else if(heroExists == false)
+					JOptionPane.showMessageDialog(createMaze,"You don't have a hero assigned!",  "Save game", JOptionPane.INFORMATION_MESSAGE);
+				else if(exitExists == false)
+					JOptionPane.showMessageDialog(createMaze,"You don't have an exit assigned!",  "Save game", JOptionPane.INFORMATION_MESSAGE);
 			}
 
 		}
@@ -1605,8 +1610,8 @@ public class GameFrame implements ActionListener, KeyListener, ChangeListener, M
 							&& (x != 0 || y != (newMaze.length-1))
 							&& (x != (newMaze.length-1) || y != 0)){
 						if(exitExists){
-						labelArray[exity][exitx].setIcon(wallImageNew);
-						newMaze[exity][exitx] = 'X';
+							labelArray[exity][exitx].setIcon(wallImageNew);
+							newMaze[exity][exitx] = 'X';
 						}
 						labelArray[y][x].setIcon(ExitImageNew);
 						newMaze[y][x] = 'S';
