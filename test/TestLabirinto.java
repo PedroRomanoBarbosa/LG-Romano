@@ -533,18 +533,17 @@ public class TestLabirinto {
 		assertEquals(13,g.getSIZE());
 		assertEquals(false,g.getPreset());
 	}
-	/*@Test 
-	public void testRemoveElements()
+	@Test
+	public void testNewConstrutor()
 	{
-		GameState e=new GameState();
-		e.initialize();
-		//e.setNumOfDragons(2);
-		assertEquals(2,e.getNumDragons());
-		e.addElements();
-		assertEquals(10,e.getSIZE());
-		Maze m=e.getMaze();
-		assertEquals(3,e.getElements().size());
-		e.removeElement("Espada", e.getEspada().getPonto().getXpos(),e.getEspada().getPonto().getYpos());
-		assertEquals(2,e.getElements().size());
-	}*/
+		GameState g=new GameState();
+		g.initialize(11);
+		g.addElements();
+		GameState gm = new GameState(g.getMaze().getLab(),1,11,g.getMaze().getExit().getXpos(),g.getMaze().getExit().getYpos());
+		assertEquals(1,gm.getDifficulty());
+		assertEquals(2,gm.getNumDragons());
+		Hero h=gm.getHero();
+		assertEquals(true,h.getState());
+		assertEquals(2,gm.getNumDards());
+	}
 }

@@ -26,7 +26,7 @@ public class GameState implements Serializable{
 	private ArrayList<Dragon> dragons = new ArrayList<Dragon>();
 	private ArrayList<Dard> dards = new ArrayList<Dard>();
 	private boolean state;
-	private int difficulty; 
+	private int difficulty;
 
 
 	/**
@@ -70,6 +70,7 @@ public class GameState implements Serializable{
 				else if(maze[y][x] == 'D'){
 					numDragons++;
 					Dragon d = new Dragon('D',true,false);
+					d.setSymbolBelow(' ');
 					d.setPosition(x, y);
 					dragons.add(d);
 				}
@@ -121,21 +122,28 @@ public class GameState implements Serializable{
 		return numDragons;
 	}
 	/**
-	 * Sets the number of dragons in the game
+	 * Sets the number of dragons in the game.
 	 * @param n number of dragons
 	 */
 	public void setNumOfDragons(int n){
 		numDragons = n;
 	}
 	/**
-	 * Set the size of the game board
+	 * Returns the number of the dards that the user has in the game.
+	 * @return numDards
+	 */
+	public int getNumDards(){
+		return numDards;
+	}
+	/**
+	 * Set the size of the game board.
 	 * @param s size 
 	 */
 	public void setSIZE(int s){
 		SIZE = s;
 	}
 	/**
-	 * Sets the game preset state
+	 * Sets the game preset state.
 	 * @param pre preset
 	 */
 	public void setPreset(boolean pre){
@@ -506,19 +514,19 @@ public class GameState implements Serializable{
 
 		switch(dir){
 		case 1:
-			if(sul == ' ' || sul == 'E')
+			if(sul == ' ' || sul == 'E' || sul == '/' || sul == 'O')
 				return 0;
 			break;
 		case 2:
-			if(norte == ' ' || norte == 'E')
+			if(norte == ' ' || norte == 'E' || norte == '/' || norte == 'O')
 				return 0;
 			break;
 		case 3:
-			if(oeste == ' ' || oeste == 'E')
+			if(oeste == ' ' || oeste == 'E' || oeste == '/' || oeste == 'O')
 				return 0;
 			break;
 		case 4:
-			if(este == ' ' || este == 'E')
+			if(este == ' ' || este == 'E' || este == '/' || este == 'O')
 				return 0;
 			break;
 		}
@@ -585,7 +593,7 @@ public class GameState implements Serializable{
 			if(sentido == 0){
 				d.setPosition(initialX, initialY);
 			}
-			else if ((nextChar == ' ') || (nextChar == 'E')) {
+			else if ((nextChar == ' ') || (nextChar == 'E') || (nextChar == '/') || (nextChar == 'O') ) {
 				moveDragaoDirection(d,nextChar,nextX, nextY,initialX,initialY);
 			}
 		}
@@ -731,12 +739,7 @@ public class GameState implements Serializable{
 		d.setPosition(nextX, nextY);
 		labirinto.getLab()[initialY][initialX] = d.getSymbolBelow();
 		labirinto.getLab()[nextY][nextX] = d.getSymbol();
-		if (nextChar == 'E'){
-			d.setSymbolBelow('E');
-		}
-		else if(nextChar == ' '){
-			d.setSymbolBelow(' ');
-		}
+		d.setSymbolBelow(nextChar);
 	}
 	/**
 	 * This function restars the game. Creates a new<br>

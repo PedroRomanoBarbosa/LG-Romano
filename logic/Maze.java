@@ -19,7 +19,12 @@ public class Maze implements Serializable{
 	
 	public Maze(char[][] m, int s, int exitx, int exity){
 		SIZE = s;
-		lab = m;
+		lab = new char[s][s];
+		for (int i = 0; i < m.length; i++) {
+			for (int j = 0; j < m.length; j++) {
+				lab[i][j] = m[i][j];
+			}
+		}
 		exit = new Point(exitx,exity);
 	}
 	
